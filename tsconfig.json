@@ -19,6 +19,7 @@
     "rootDir": ".",
     "baseUrl": "./",
     "paths": {
+      "graphql": ["node_modules/graphql"],
       "@nestjs-yalc/database": ["database/src"],
       "@nestjs-yalc/database/*": ["database/src/*"],
       "@nestjs-yalc/ag-grid": ["ag-grid/src"],

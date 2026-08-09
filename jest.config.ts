@@ -19,7 +19,7 @@ Object.keys(tsProjects.compilerOptions.paths).map((k: string) => {
 });
 
 const options: IOptions = {
-  skipProjects: ['types', 'graphql'],
+  skipProjects: ['types', 'node_modules/graphql'],
 };
 
 export default jestConfGenerator(
