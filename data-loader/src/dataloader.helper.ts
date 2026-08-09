@@ -16,10 +16,10 @@ import {
   getServiceToken,
 } from '@nestjs-yalc/ag-grid/generic-service.service';
 import { ClassType } from '@nestjs-yalc/types/globals';
-import { getProviderToken } from '@nestjs-yalc/ag-grid/ag-grid.helpers';
 // import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EventAgGrid } from '@nestjs-yalc/ag-grid/event.enum';
 import { EventEmitter2 } from 'eventemitter2';
+import { getProviderToken } from "@nestjs-yalc/ag-grid/ag-grid-factory.helper";
 
 export type SearchKeyType<E, T = string> = [keyof E, T] | T | undefined;
 

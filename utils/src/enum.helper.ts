@@ -15,8 +15,7 @@ export const belongsToEnum = <T extends Record<string, any>>(
 
 type Merge<T extends readonly any[]> = T extends readonly [infer H, ...infer R]
   ? Spread<H, Merge<R>>
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-    {};
+  : Record<string, unknown>;
 
 export const mergeEnums = <T extends any[]>(...enums: T) => {
   let merged = {};

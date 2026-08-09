@@ -23,7 +23,6 @@ export const mockedExecutionContext = createMock<ExecutionContext>();
  *
  * @returns DeepMocked object with all methods returning "this" by default
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export const mockChainingObject = <T extends object>(
   partial?: PartialFuncReturn<T>,
   options?: MockOptions,

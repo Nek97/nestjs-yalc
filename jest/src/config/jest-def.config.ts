@@ -95,7 +95,9 @@ const defaultConf = (dirname: string) => {
   const mapper = pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: dirname,
   }) || {};
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   mapper['^uuid$'] = require.resolve('uuid').replace(/\\/g, '/');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   mapper['^typeorm$'] = require.resolve('typeorm').replace(/\\/g, '/');
 
   return {

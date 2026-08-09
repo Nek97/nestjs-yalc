@@ -47,14 +47,6 @@ import {
   WhereConditionType,
 } from './ag-grid.type';
 import {
-  applyJoinArguments,
-  columnConversion,
-  forceFilters,
-  isAskingForCount,
-  isSymbolic,
-  objectToFieldMapper,
-} from './ag-grid.helpers';
-import {
   AgGridError,
   AgGridFilterNotSupportedError,
   AgGridFilterProhibited,
@@ -79,6 +71,8 @@ import {
   isSetFilterModel,
   isTextFilterModel,
 } from './ag-grid-type-checker.utils';
+import { applyJoinArguments, forceFilters, isAskingForCount } from "./ag-grid-query.helper";
+import { columnConversion, isSymbolic, objectToFieldMapper } from "./ag-grid-metadata.helper";
 
 export function getTextFilter(filter: string, firstParameter: string) {
   switch (filter.toLowerCase()) {

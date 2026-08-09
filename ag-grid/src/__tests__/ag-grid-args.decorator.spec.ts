@@ -32,7 +32,7 @@ import {
 import * as graphql from '@nestjs/graphql';
 import * as AgGridInput from '../ag-grid.input';
 import * as GqlAgGridDecorator from '../gqlfields.decorator';
-import * as AgGridHelpers from '../ag-grid.helpers';
+import * as AgGridHelpers from '../ag-grid-metadata.helper';
 import {
   AgGridFilterNotSupportedError,
   AgGridFilterProhibited,
@@ -78,6 +78,8 @@ import {
   MissingArgumentsError,
 } from '../missing-arguments.error';
 import { TestEntity } from '../__mocks__/entity.mock';
+import * as AgGridQueryHelpers from "../ag-grid-query.helper";
+import * as AgGridFactoryHelpers from "../ag-grid-factory.helper";
 
 const firstTextParameter = 'a';
 const firstNumberParameter = 1;

@@ -6,8 +6,10 @@ import {
   sortModelFactory,
 } from '../ag-grid.input';
 import * as AgGridEnum from '../ag-grid.enum';
-import * as AgGridHelpers from '../ag-grid.helpers';
+import * as AgGridHelpers from '../ag-grid-metadata.helper';
 import { TestEntity, TestEntityRelation } from '../__mocks__/entity.mock';
+import * as AgGridQueryHelpers from "../ag-grid-query.helper";
+import * as AgGridFactoryHelpers from "../ag-grid-factory.helper";
 
 describe('Dynamic user input dto test', () => {
   const spiedEntityFieldsEnumFactory = jest.spyOn(

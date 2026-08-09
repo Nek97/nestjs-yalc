@@ -11,30 +11,34 @@ import {
 import {
   forceFilterWorker,
   forceFilters,
-  columnConversion,
-  isSymbolic,
   whereObjectToSqlString,
   isAskingForCount,
-  isIFieldAndFilterMapper,
-  objectToFieldMapper,
-  IAgGridDependencyFactoryOptions,
-  AgGridDependencyFactory,
   filterTypeToNativeType,
   traverseFiltersAndApplyFunction,
   isFilterExpressionInput,
   applyJoinArguments,
-  getFieldMapperSrcByDst,
-  getProviderToken,
-  getMappedTypeProperties,
-  getTypeProperties,
   applySelectOnFind,
   formatRawSelection,
+} from '../ag-grid-query.helper';
+import {
+  columnConversion,
+  isSymbolic,
+  isIFieldAndFilterMapper,
+  objectToFieldMapper,
+  getFieldMapperSrcByDst,
+  getMappedTypeProperties,
+  getTypeProperties,
   getDestinationFieldName,
-} from '../ag-grid.helpers';
+} from '../ag-grid-metadata.helper';
+import {
+  IAgGridDependencyFactoryOptions,
+  AgGridDependencyFactory,
+  getProviderToken,
+} from '../ag-grid-factory.helper';
 import { JoinArgOptions, JoinTypes } from '../ag-grid.input';
 import { IWhereCondition } from '../ag-grid.type';
 import * as ObjectDecorator from '../object.decorator';
-import * as AgGridHelpers from '../ag-grid.helpers';
+import * as AgGridHelpers from '../ag-grid-metadata.helper';
 
 import {
   FilterOption,
@@ -50,6 +54,8 @@ import {
 import { GenericService } from '../generic-service.service';
 import { GQLDataLoader } from '@nestjs-yalc/data-loader/dataloader.helper';
 import { Resolver } from '@nestjs/graphql';
+import * as AgGridQueryHelpers from "../ag-grid-query.helper";
+import * as AgGridFactoryHelpers from "../ag-grid-factory.helper";
 
 const fixedKey = 'passed';
 const dbName = 'original';

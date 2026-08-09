@@ -17,7 +17,6 @@ import {
   Operators,
   SortDirection,
 } from './ag-grid.enum';
-import { getEntityRelations } from './ag-grid.helpers';
 import {
   DateFilterModel,
   FilterInput,
@@ -26,6 +25,7 @@ import {
   SetFilterModel,
   TextFilterModel,
 } from './ag-grid.interface';
+import { getEntityRelations } from "./ag-grid-metadata.helper";
 
 export interface SortModel<T = any> {
   colId: keyof T | string;

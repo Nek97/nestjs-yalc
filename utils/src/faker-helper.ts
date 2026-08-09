@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error - Faker doesn't export the Unique type directly
 import { faker } from '@faker-js/faker';
 
 // TODO: Probably we can use the internal faker of typeorm-seeding to create uniqueness, like we do here

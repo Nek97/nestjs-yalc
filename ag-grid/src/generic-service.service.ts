@@ -23,10 +23,10 @@ import { FindManyOptions } from 'typeorm';
 import { AgGridRepository } from '@nestjs-yalc/ag-grid/ag-grid.repository';
 import { AgGridFindManyOptions } from '@nestjs-yalc/ag-grid/ag-grid.interface';
 import { ClassType } from '@nestjs-yalc/types/globals';
-import { getProviderToken } from './ag-grid.helpers';
 import { ReplicationMode } from '@nestjs-yalc/database/query-builder.helper';
 import { isClass } from '@nestjs-yalc/utils/class.helper';
 import { getAgGridFieldMetadataList, isDstExtended } from './object.decorator';
+import { getProviderToken } from "./ag-grid-factory.helper";
 
 /**
  *

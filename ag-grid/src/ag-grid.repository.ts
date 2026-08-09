@@ -11,15 +11,12 @@ import {
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
-import {
-  applySelectOnFind,
-  objectToFieldMapper,
-  whereObjectToSqlString,
-} from './ag-grid.helpers';
 import { AgGridFindManyOptions } from './ag-grid.interface';
 import { WhereFilters } from './ag-grid.type';
 import { AgGridFieldMetadata } from './object.decorator';
-import './query-builder.helpers'; // must be imported here
+import './query-builder.helpers';
+import { applySelectOnFind, whereObjectToSqlString } from "./ag-grid-query.helper";
+import { objectToFieldMapper } from "./ag-grid-metadata.helper";
 
 export const AG_GRID_MAIN_ALIAS = 'AgGridMainAlias';
 

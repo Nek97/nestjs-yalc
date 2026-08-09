@@ -5,12 +5,14 @@ jest.mock('@nestjs-yalc/ag-grid/ag-grid.args', () => ({
 
 import { IFieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
 import * as $ from '../gqlfields.decorator';
-import * as AgGridHelper from '../ag-grid.helpers';
+import * as AgGridHelpers from '../ag-grid-metadata.helper';
 import {
   mockedExecutionContext,
   mockedNestGraphql,
 } from '@nestjs-yalc/jest/common-mocks.helper';
 import { GraphQLResolveInfo } from 'graphql';
+import * as AgGridQueryHelpers from "../ag-grid-query.helper";
+import * as AgGridFactoryHelpers from "../ag-grid-factory.helper";
 
 const infoObj: GraphQLResolveInfo = {
   fieldNodes: [
@@ -320,7 +322,7 @@ describe('Graphql decorator test', () => {
   it('Check with nested', async () => {
     const arr: IFieldMapper = { ['first']: { dst: 'specified' } };
     jest
-      .spyOn(AgGridHelper, 'objectToFieldMapper')
+      .spyOn(AgGridHelpers, 'objectToFieldMapper')
       .mockReturnValue(fieldAndFilterMapper);
     const GqlFieldsMapperTest = $.GqlAgGridFieldsMapper(arr, edgesObj);
 
@@ -353,7 +355,7 @@ describe('Graphql decorator test', () => {
     };
 
     jest
-      .spyOn(AgGridHelper, 'objectToFieldMapper')
+      .spyOn(AgGridHelpers, 'objectToFieldMapper')
       .mockReturnValue(fieldAndFilterMapper);
     const GqlFieldsMapperTest = $.GqlAgGridFieldsMapper(arr, infoObj);
 
@@ -366,7 +368,7 @@ describe('Graphql decorator test', () => {
     };
 
     jest
-      .spyOn(AgGridHelper, 'objectToFieldMapper')
+      .spyOn(AgGridHelpers, 'objectToFieldMapper')
       .mockReturnValue({ ...fieldAndFilterMapper, extraInfo: undefined });
     const GqlFieldsMapperTest = $.GqlAgGridFieldsMapper(arr, infoObj);
 

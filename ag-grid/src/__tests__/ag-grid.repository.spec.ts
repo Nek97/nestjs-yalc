@@ -13,7 +13,9 @@ import { DeepMocked } from '@golevelup/ts-jest';
 import { mockQueryBuilder } from '@nestjs-yalc/jest/common-mocks.helper';
 import { Alias } from 'typeorm/query-builder/Alias';
 import * as Typeorm from 'typeorm';
-import * as AgGridHelpers from '../ag-grid.helpers';
+import * as AgGridHelpers from '../ag-grid-metadata.helper';
+import * as AgGridQueryHelpers from "../ag-grid-query.helper";
+import * as AgGridFactoryHelpers from "../ag-grid-factory.helper";
 
 jest.mock('typeorm');
 jest.mock('@nestjs-yalc/database/query-builder.helper');
@@ -465,7 +467,7 @@ describe('AgGrid Repoository', () => {
   it('Should check genereteSelectOnFind', () => {
     jest.spyOn(AgGridHelpers, 'objectToFieldMapper').mockReturnValue({});
     jest
-      .spyOn(AgGridHelpers, 'applySelectOnFind')
+      .spyOn(AgGridQueryHelpers, 'applySelectOnFind')
       .mockImplementation((findOptions, field, fieldMapperField) => {
         findOptions.select = [];
         findOptions.select.push('id');

@@ -1,9 +1,10 @@
 import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
-import { formatRawSelection, getDestinationFieldName } from './ag-grid.helpers';
 import {
   getAgGridFieldMetadataList,
   AgGridFieldMetadata,
 } from './object.decorator';
+import { formatRawSelection } from "./ag-grid-query.helper";
+import { getDestinationFieldName } from "./ag-grid-metadata.helper";
 
 /**
  * Monkey patching query builder

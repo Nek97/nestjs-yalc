@@ -42,11 +42,6 @@ import {
 import { ContextId, ContextIdFactory, ModuleRef } from '@nestjs/core';
 import { Mutation } from '@nestjs/graphql';
 import { ClassType } from '@nestjs-yalc/types';
-import {
-  filterTypeToNativeType,
-  getEntityRelations,
-  RelationInfo,
-} from './ag-grid.helpers';
 import { getAgGridFieldMetadataList } from './object.decorator';
 import { AgGridError } from './ag-grid.error';
 import { ExtraArgsStrategy } from './ag-grid.enum';
@@ -54,6 +49,10 @@ import { AgQueryParams } from './ag-grid.args';
 import { InputArgs } from '@nestjs-yalc/ag-grid/gqlmapper.decorator';
 import { isClass } from '@nestjs-yalc/utils/class.helper';
 import { GetContext } from '@nestjs-yalc/utils/nest.decorator';
+import { filterTypeToNativeType } from "./ag-grid-query.helper";
+import { getEntityRelations } from "./ag-grid-metadata.helper";
+import { RelationInfo } from "./ag-grid-factory.helper";
+
 export interface GenericResolver {
   [index: string]: any; //index signature
 }

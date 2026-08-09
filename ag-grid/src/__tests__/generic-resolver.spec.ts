@@ -24,7 +24,7 @@ import {
   TestEntityRelation2,
 } from '../__mocks__/entity.mock';
 import * as AgGridObjectDecorator from '../object.decorator';
-import * as AgGridHelpers from '../ag-grid.helpers';
+import * as AgGridHelpers from '../ag-grid-metadata.helper';
 
 import { IAgGridFieldMetadata } from '../object.decorator';
 import { BaseEntity } from 'typeorm';
@@ -32,6 +32,8 @@ import { AgGridFindManyOptions } from '../ag-grid.interface';
 import { FilterType } from '../ag-grid.enum';
 import { GqlExecutionContext, Query, Resolver } from '@nestjs/graphql';
 import { IRelationInfo } from '../ag-grid.helpers';
+import * as AgGridQueryHelpers from "../ag-grid-query.helper";
+import * as AgGridFactoryHelpers from "../ag-grid-factory.helper";
 
 jest.mock('@nestjs/graphql');
 
