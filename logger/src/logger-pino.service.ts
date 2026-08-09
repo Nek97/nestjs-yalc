@@ -45,13 +45,13 @@ export class PinoLogger extends LoggerAbstractService {
       logger.flush();
     }, FLUSH_INTERVAL).unref();
 
-    // use pino.final to create a special logger that
-    // guarantees final tick writes
-    const handler = pino.final(logger, (err: Error | null, finalLogger: pino.Logger, evt: string) => {
-      finalLogger.info(`${evt} caught`);
-      if (err) finalLogger.error(err, 'error caused exit');
+    // Since Pino v9, pino.final is removed and the standard logger can be used
+    const handler = (err: Error | null, evt: string) => {
+      logger.info(`${evt} caught`);
+      if (err) logger.error(err, 'error caused exit');
+      logger.flush();
       process.exit(err ? 1 : 0);
-    });
+    };
     // catch all the ways node might exit
     process.on('beforeExit', () => handler(null, 'beforeExit'));
     process.on('exit', () => handler(null, 'exit'));
