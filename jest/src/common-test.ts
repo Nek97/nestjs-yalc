@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { ClassType, FactoryType } from '@nestjs-yalc/interfaces/common.type';
+// @ts-ignore
 import * as faker from 'faker';
 import { getTestFilenameWithoutExtension } from './helpers';
 
@@ -22,7 +23,7 @@ export function classesAreDefinedTest(
 
 export function factoriesAreDefinedTest(
   moduleName: string,
-  factoryList: FactoryType[],
+  factoryList: FactoryType<any>[],
 ) {
   describe(`${getTestFilenameWithoutExtension(
     moduleName,

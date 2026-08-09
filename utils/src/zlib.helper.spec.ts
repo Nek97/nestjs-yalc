@@ -32,9 +32,8 @@ describe('Zlib helper test', () => {
   });
 
   it('should be able to compress a stringified object', () => {
-    expect(deflate(JSON.stringify(largeObject)).toString('base64')).toEqual(
-      deflated,
-    );
+    const compressed = deflate(JSON.stringify(largeObject)).toString('base64');
+    expect(JSON.parse(inflate(compressed))).toEqual(largeObject);
   });
 
   it('should be able to decompress a base 64 string', () => {

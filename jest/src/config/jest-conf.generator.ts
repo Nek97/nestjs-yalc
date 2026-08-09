@@ -96,7 +96,7 @@ export function jestConfGenerator(
     .options(jestOptionObject)
     .fail(() => {
       // nothing to do
-    }).argv;
+    }).argv as any;
 
   const possiblePath = argv.path ?? argv.testPathPattern?.[0];
   const testPath: string = typeof possiblePath === 'string' ? possiblePath : '';

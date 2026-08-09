@@ -186,6 +186,8 @@ describe('getDefaultDbConnectionConfig for single or replicas db', () => {
       MYSQL_ROOT_PASSWORD: 'ROOT_PWD_TEST',
     });
 
+    global.__JEST_DISABLE_DB = true;
+
     const { host, port, username, password } = buildDbConfigObject({
       dbName: 'TEST_DB_NAME',
       entities: [],

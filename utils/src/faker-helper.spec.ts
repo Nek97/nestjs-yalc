@@ -78,7 +78,7 @@ describe('faker helper test', () => {
 
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
-    const currentDay = currentDate.getUTCDate();
+    const currentDay = currentDate.getDate();
 
     const birthDate = fakerHelper.randomBirthDate();
     const splitted = birthDate.split('-');
@@ -97,7 +97,7 @@ describe('faker helper test', () => {
 
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
-    const currentDay = currentDate.getUTCDate();
+    const currentDay = currentDate.getDate();
 
     const birthDate = fakerHelper.randomBirthDate();
     const splitted = birthDate.split('-');

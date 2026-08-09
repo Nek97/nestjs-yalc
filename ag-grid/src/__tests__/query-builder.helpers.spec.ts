@@ -5,7 +5,9 @@ import { SelectQueryBuilderPatched } from '../query-builder.helpers';
 
 describe('QueryBuilderHelper', () => {
   let testQb: SelectQueryBuilderPatched<Partial<ExtendedBaseEntity>>;
-  const mockedQb = mockQueryBuilder<Partial<ExtendedBaseEntity>>();
+  const mockedQb = mockQueryBuilder<Partial<ExtendedBaseEntity>>({
+    expressionMap: { clone: jest.fn().mockReturnValue({}) } as any,
+  });
   beforeEach(() => {
     testQb = new SelectQueryBuilderPatched<Partial<ExtendedBaseEntity>>(
       mockedQb,

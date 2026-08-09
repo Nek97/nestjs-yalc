@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import * as path from 'path';
-import { pathsToModuleNameMapper } from 'ts-jest/utils';
+import { pathsToModuleNameMapper } from 'ts-jest';
 import { defaults } from 'jest-config';
 
 export const coveragePathIgnorePatterns = [
@@ -21,7 +21,7 @@ export const globals = (tsConfPath = '') => {
       tsconfig: {
         ...tsConfig.compilerOptions,
         emitDecoratorMetadata: false,
-        experimentalDecorators: false,
+        experimentalDecorators: true,
       },
       diagnostics: false,
       // Setting isolatedModules to true improves the performance but it
@@ -92,6 +92,11 @@ export const globalsE2E = (tsConfPath = '') => ({
 const defaultConf = (dirname: string) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const compilerOptions = require(`${dirname}/tsconfig.json`).compilerOptions;
+  const mapper = pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: dirname,
+  }) || {};
+  mapper['^uuid$'] = require.resolve('uuid').replace(/\\/g, '/');
+  mapper['^typeorm$'] = require.resolve('typeorm').replace(/\\/g, '/');
 
   return {
     rootDir: dirname,
@@ -109,9 +114,8 @@ const defaultConf = (dirname: string) => {
     transform: {
       '^.+\\.(t|j)s$': 'ts-jest',
     },
-    moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-      prefix: dirname,
-    }),
+    moduleNameMapper: mapper,
+    transformIgnorePatterns: ['/node_modules/(?!(uuid)/)'],
     errorOnDeprecated: true,
   };
 };

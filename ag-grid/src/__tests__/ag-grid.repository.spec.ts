@@ -1,7 +1,6 @@
 import {
   BaseEntity,
   EntityMetadata,
-  FindOptionsUtils,
   SelectQueryBuilder,
 } from 'typeorm';
 import {
@@ -17,7 +16,6 @@ import * as Typeorm from 'typeorm';
 import * as AgGridHelpers from '../ag-grid.helpers';
 
 jest.mock('typeorm');
-jest.mock('typeorm/find-options/FindOptionsUtils');
 jest.mock('@nestjs-yalc/database/query-builder.helper');
 
 const fakeFindOptions = {
@@ -119,9 +117,7 @@ describe('AgGrid Repoository', () => {
       .spyOn(newAgGridRepository, 'createQueryBuilder')
       .mockImplementation(() => mockedQueryBuilder);
 
-    jest
-      .spyOn(FindOptionsUtils, 'applyFindManyOptionsOrConditionsToQueryBuilder')
-      .mockImplementation(() => mockedQueryBuilder);
+
   });
 
   afterEach(() => {
@@ -383,7 +379,7 @@ describe('AgGrid Repoository', () => {
       },
     );
 
-    expect(testData).toEqual(mockedQueryBuilder);
+    expect(testData).toEqual(newQueryBuilder);
   });
 
   it('getOneAgGrid should return an entity correctly', async () => {

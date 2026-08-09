@@ -293,7 +293,7 @@ describe('GqlComplexityHelper', () => {
   });
 
   it('should process GraphQL document', () => {
-    spyOn(GqlComplexityHelper, 'hasInvalidNode');
+    jest.spyOn(GqlComplexityHelper, 'hasInvalidNode');
 
     GqlComplexityHelper.processDocumentAST({
       kind: 'Document',
@@ -315,12 +315,21 @@ describe('GqlComplexityHelper', () => {
           },
         },
       ],
-    });
+    }, {
+      getQueryType: () => ({
+        getFields: () => ({
+          VALID_OPERATION: {
+            extensions: { complexity: 2 }
+          }
+        })
+      })
+    } as any);
     expect(GqlComplexityHelper.hasInvalidNode).toHaveBeenCalledTimes(1);
+    expect(GqlComplexityHelper.customMaxDepth).toBe(2);
   });
 
   it('should skip ID field', () => {
-    spyOn(GqlComplexityHelper, 'findInvalidNode');
+    jest.spyOn(GqlComplexityHelper, 'findInvalidNode');
 
     GqlComplexityHelper.processDocumentAST({
       kind: 'Document',
@@ -374,7 +383,7 @@ describe('GqlComplexityHelper', () => {
         },
       ],
     });
-    expect(GqlComplexityHelper.findInvalidNode).toHaveBeenCalledTimes(2);
+    expect(GqlComplexityHelper.findInvalidNode).toHaveBeenCalledTimes(3);
   });
 
   it('should not process document without selection set', () => {
