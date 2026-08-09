@@ -2,7 +2,7 @@ import { BaseEntity } from 'typeorm';
 import { createMock } from '@golevelup/ts-jest';
 import { AgGridRepository } from '@nestjs-yalc/ag-grid/ag-grid.repository';
 import { AgGridField, AgGridObject } from '../object.decorator';
-import { JsonTransformer } from '../transformers.helpers';
+import { JsonTransformer } from '../transformer.helper';
 
 @AgGridObject({})
 export class ReadEntity {

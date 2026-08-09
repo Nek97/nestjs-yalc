@@ -1,4 +1,4 @@
-import { FieldErrorsEnum } from '../fields-error.enum';
+import { FieldErrorsEnum } from '../field-error.enum';
 import {
   convertIfStringToDate,
   errorTrhow,
