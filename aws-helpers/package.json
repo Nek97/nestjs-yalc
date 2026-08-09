@@ -12,6 +12,6 @@
   "author": "",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "aws-sdk": "^2.1048.0"
+    "aws-sdk": "^2.1693.0"
   }
 }
