@@ -1,2 +1,2 @@
-export type ClassType<T = any> = new (...args: any[]) => T;
-export type FactoryType<T> = (faker?: any) => T;
+export type ClassType<T = unknown> = new (...args: unknown[]) => T;
+export type FactoryType<T> = (faker?: unknown) => T;

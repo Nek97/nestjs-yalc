@@ -9,7 +9,7 @@ declare global {
     }
     interface Global {
       __JEST_DISABLE_DB: boolean;
-      TypeORM_Seeding_Connection: any;
+      TypeORM_Seeding_Connection: unknown;
     }
   }
 }
@@ -17,7 +17,7 @@ declare global {
 export declare type ClassType<Class = any> = { new (...args: any[]): Class };
 
 export declare type AnyFunction<A = any> = (...input: any[]) => A;
-export declare type AnyConstructor<A = Record<string, unknown>> = new (
+export declare type AnyConstructor<A = Record<string, any>> = new (
   ...input: any[]
 ) => A;
 
