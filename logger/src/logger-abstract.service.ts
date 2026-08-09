@@ -2,9 +2,9 @@
 import { LoggerService, LogLevel } from '@nestjs/common';
 import { LogLevelEnum } from './logger.enum';
 
-export type LogMethod = (message: any, context?: string) => void;
+export type LogMethod = (message: unknown, context?: string) => void;
 export type LogMethodError = (
-  message: any,
+  message: unknown,
   trace?: string,
   context?: string,
 ) => void;
@@ -23,7 +23,7 @@ export abstract class LoggerAbstractService implements LoggerService {
     protected methods: LoggerService,
   ) {
     const enabledLevels: { [key: string]: boolean } = {};
-    this.logLevels?.forEach((level) => {
+    this.logLevels?.forEach((level): void => {
       if (!(level.toUpperCase() in LogLevelEnum))
         throw new Error(`ERROR: Logger Level: ${level} is not supported!`);
 

@@ -1,5 +1,4 @@
 import { LogLevel } from '@nestjs/common';
-// @ts-expect-error - Type instantiation is excessively deep
 import { default as pino, stdTimeFunctions } from 'pino';
 import { LoggerAbstractService } from './logger-abstract.service';
 
