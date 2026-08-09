@@ -45,13 +45,13 @@ export interface SortModelStrict<T> extends SortModel<T> {
  */
 @InputType()
 export class SortModel<T = any> implements SortModel<T> {
-  colId!: string;
+  colId!: keyof T | string;
   @Field(
     /* istanbul ignore next */
     () => SortDirection,
     { nullable: true, defaultValue: 'ASC' },
   )
-  sort!: SortDirection;
+  sort?: SortDirection;
 }
 
 const sortModelCacheMap = new WeakMap();
@@ -72,7 +72,7 @@ export function sortModelFactory<Entity>(entityModel: ClassType<Entity>) {
       () => SortDirection,
       { nullable: true, defaultValue: 'ASC' },
     )
-    sort!: SortDirection;
+    sort?: SortDirection;
   }
 
   sortModelCacheMap.set(entityModel, SortModel);

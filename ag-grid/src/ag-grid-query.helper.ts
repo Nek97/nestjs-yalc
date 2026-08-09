@@ -1,70 +1,40 @@
-import {
-  DataLoaderFactory,
-  getDataloaderToken,
-} from '@nestjs-yalc/data-loader/dataloader.helper';
 import { QueryBuilderHelper } from '@nestjs-yalc/database/query-builder.helper';
 import {
-  FieldMapper,
-  isFieldMapper,
+    FieldMapper
 } from '@nestjs-yalc/interfaces/maps.interface';
-import { ClassType } from '@nestjs-yalc/types';
-import {
-  ClassProvider,
-  ExistingProvider,
-  FactoryProvider,
-  Provider,
-  ValueProvider,
-} from '@nestjs/common';
-import { ReturnTypeFuncValue } from '@nestjs/graphql';
+
 import { GraphQLResolveInfo } from 'graphql';
-import { Equal, getMetadataArgsStorage, SelectQueryBuilder, ObjectLiteral } from 'typeorm';
-import { JoinColumnMetadataArgs } from 'typeorm/metadata-args/JoinColumnMetadataArgs';
-import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
+import { Equal, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import { createWhere, getFindOperator } from './ag-grid-args.decorator';
+import { columnConversion, objectToFieldMapper } from "./ag-grid-metadata.helper";
 import {
-  isCombinedWhereModel,
-  isFindOperator,
+    isCombinedWhereModel,
+    isFindOperator,
 } from './ag-grid-type-checker.utils';
 import { FilterType, Operators } from './ag-grid.enum';
 import {
-  AgGridConditionNotSupportedError,
-  AgGridNotPossibleError,
-  AgGridStringWhereError,
+    AgGridConditionNotSupportedError,
+    AgGridNotPossibleError,
+    AgGridStringWhereError,
 } from './ag-grid.error';
 import { JoinArgOptions, JoinTypes } from './ag-grid.input';
 import {
-  ExtraArg,
-  AgGridFindManyOptions,
-  FilterInput,
+    AgGridFindManyOptions,
+    ExtraArg,
+    FilterInput,
 } from './ag-grid.interface';
 import {
-  AgGridRepository,
-  AgGridRepositoryFactory,
-} from './ag-grid.repository';
-import {
-  findOperatorTypes,
-  FilterArg,
-  WhereCondition,
-  WhereConditionType,
-  WhereFilters,
+    FilterArg,
+    findOperatorTypes,
+    WhereCondition,
+    WhereConditionType,
+    WhereFilters,
 } from './ag-grid.type';
+
 import {
-  GenericResolverOptions,
-  resolverFactory,
-} from './generic-resolver.resolver';
-import {
-  GenericService,
-  GenericServiceFactory,
-} from './generic-service.service';
-import {
-  DstExtended,
-  getAgGridFieldMetadataList,
-  getAgGridObjectMetadata,
-  AgGridFieldMetadata,
-  FieldAndFilterMapper,
-  isDstExtended,
+    AgGridFieldMetadata,
+    FieldAndFilterMapper
 } from './object.decorator';
-import { columnConversion, objectToFieldMapper, getMappedTypeProperties, getEntityRelations } from "./ag-grid-metadata.helper";
 
 export const forceFilters = (
   where: WhereCondition | string | undefined,
@@ -218,21 +188,6 @@ export const isAskingForCount = (info: GraphQLResolveInfo): boolean => {
     return false;
   }
 };
-const objectToFieldMapperCache = new WeakMap();
-
-interface GenericServiceOptions<Entity extends ObjectLiteral> {
-  dbConnection: string;
-  entityModel?: ClassType<Entity>;
-  /**
-   * Used only if the service has not external injected dependency rather than the repository
-   */
-  providerClass?: ClassType<GenericService<Entity>>;
-}
-
-interface DataLoaderOptions<Entity> {
-  databaseKey: keyof Entity;
-  entityModel?: ClassType<Entity>;
-}
 
 export function filterTypeToNativeType(type: FilterType) {
   switch (type) {

@@ -3,8 +3,8 @@ import { ClassType } from "@nestjs-yalc/types";
 import { isClass } from "@nestjs-yalc/utils/class.helper";
 import { GetContext } from "@nestjs-yalc/utils/nest.decorator";
 import returnValue from "@nestjs-yalc/utils/returnValue";
-import { UseInterceptors, ExecutionContext, applyDecorators, Query } from "@nestjs/common";
-import { ResolveField, Parent, GqlExecutionContext, Args } from "@nestjs/graphql";
+import { ExecutionContext, Query, UseInterceptors, applyDecorators } from "@nestjs/common";
+import { Args, GqlExecutionContext, Parent, ResolveField } from "@nestjs/graphql";
 import { AgGridArgs, AgGridArgsSingle } from "./ag-grid-args.decorator";
 import { RelationInfo } from "./ag-grid-factory.helper";
 import { filterTypeToNativeType } from "./ag-grid-query.helper";
@@ -12,7 +12,7 @@ import { AgGridError } from "./ag-grid.error";
 import { AgGridInterceptor } from "./ag-grid.interceptor";
 import { AgGridFindManyOptions } from "./ag-grid.interface";
 import AgGridGqlType from "./ag-grid.type";
-import { GenericResolver, hasFilters, GenericResolverQueryOptions, isIDArg, checkFinalId, generateDecorators, hasExtraArgs } from "./generic-resolver.type";
+import { GenericResolver, GenericResolverQueryOptions, checkFinalId, generateDecorators, hasExtraArgs, hasFilters, isIDArg } from "./generic-resolver.type";
 
 export function defineFieldResolver<Entity extends Record<string, any> = any>(
   resolverInfoList: RelationInfo[],

@@ -1,10 +1,10 @@
-import { FieldMapper, DecoratorType } from "@nestjs-yalc/interfaces";
+import { DecoratorType, FieldMapper } from "@nestjs-yalc/interfaces";
 import { ClassType } from "@nestjs-yalc/types";
 import { Query } from "@nestjs/common";
-import { QueryOptions, MutationOptions, ReturnTypeFunc, GqlExecutionContext, ArgsOptions, Mutation } from "@nestjs/graphql";
+import { ArgsOptions, GqlExecutionContext, Mutation, MutationOptions, QueryOptions, ReturnTypeFunc } from "@nestjs/graphql";
 import { AgQueryParams } from "./ag-grid.args";
 import { ExtraArgsStrategy } from "./ag-grid.enum";
-import { ExtraArg, DArg, AgGridFindManyOptions } from "./ag-grid.interface";
+import { AgGridFindManyOptions, DArg, ExtraArg } from "./ag-grid.interface";
 
 export interface GenericResolver {
   [index: string]: any; //index signature
@@ -134,5 +134,5 @@ export function generateDecorators(
       ...options?.queryParams,
       name: options?.queryParams?.name ?? defaultName,
     }),
-  ];
+  ] as any[];
 }

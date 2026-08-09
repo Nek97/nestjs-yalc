@@ -1,69 +1,22 @@
 import {
-  DataLoaderFactory,
-  getDataloaderToken,
-} from '@nestjs-yalc/data-loader/dataloader.helper';
-import { QueryBuilderHelper } from '@nestjs-yalc/database/query-builder.helper';
-import {
-  FieldMapper,
-  isFieldMapper,
+    FieldMapper,
+    isFieldMapper,
 } from '@nestjs-yalc/interfaces/maps.interface';
 import { ClassType } from '@nestjs-yalc/types';
-import {
-  ClassProvider,
-  ExistingProvider,
-  FactoryProvider,
-  Provider,
-  ValueProvider,
-} from '@nestjs/common';
 import { ReturnTypeFuncValue } from '@nestjs/graphql';
-import { GraphQLResolveInfo } from 'graphql';
-import { Equal, getMetadataArgsStorage, SelectQueryBuilder, ObjectLiteral } from 'typeorm';
+import { getMetadataArgsStorage } from 'typeorm';
 import { JoinColumnMetadataArgs } from 'typeorm/metadata-args/JoinColumnMetadataArgs';
 import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
-import { createWhere, getFindOperator } from './ag-grid-args.decorator';
+import { RelationInfo } from "./ag-grid-factory.helper";
 import {
-  isCombinedWhereModel,
-  isFindOperator,
-} from './ag-grid-type-checker.utils';
-import { FilterType, Operators } from './ag-grid.enum';
-import {
-  AgGridConditionNotSupportedError,
-  AgGridNotPossibleError,
-  AgGridStringWhereError,
-} from './ag-grid.error';
-import { JoinArgOptions, JoinTypes } from './ag-grid.input';
-import {
-  ExtraArg,
-  AgGridFindManyOptions,
-  FilterInput,
-} from './ag-grid.interface';
-import {
-  AgGridRepository,
-  AgGridRepositoryFactory,
-} from './ag-grid.repository';
-import {
-  findOperatorTypes,
-  FilterArg,
-  WhereCondition,
-  WhereConditionType,
-  WhereFilters,
-} from './ag-grid.type';
-import {
-  GenericResolverOptions,
-  resolverFactory,
-} from './generic-resolver.resolver';
-import {
-  GenericService,
-  GenericServiceFactory,
-} from './generic-service.service';
-import {
-  DstExtended,
-  getAgGridFieldMetadataList,
-  getAgGridObjectMetadata,
-  AgGridFieldMetadata,
-  FieldAndFilterMapper,
-  isDstExtended,
+    AgGridFieldMetadata,
+    DstExtended,
+    FieldAndFilterMapper,
+    getAgGridFieldMetadataList,
+    getAgGridObjectMetadata,
+    isDstExtended,
 } from './object.decorator';
+
 export const columnConversion = (
   key: string,
   data: FieldMapper | { [key: string]: AgGridFieldMetadata } | undefined,
@@ -117,7 +70,7 @@ export const objectToFieldMapper = (
     | ClassType,
 ): FieldAndFilterMapper => {
   if (typeof object !== 'symbol') {
-    const cached = objectToFieldMapperCache.get(object);
+    const cached = objectToFieldMapperCache.get(object as object);
     if (cached) {
       return cached;
     }
@@ -172,7 +125,7 @@ export const objectToFieldMapper = (
   } */
 
   if (typeof object !== 'symbol')
-    objectToFieldMapperCache.set(object, fieldMapper);
+    objectToFieldMapperCache.set(object as object, fieldMapper);
 
   return fieldMapper;
 };
@@ -181,20 +134,6 @@ export function isIFieldAndFilterMapper(
   val: FieldMapper | FieldAndFilterMapper,
 ): val is FieldAndFilterMapper {
   return val?.field !== undefined;
-}
-
-interface GenericServiceOptions<Entity extends ObjectLiteral> {
-  dbConnection: string;
-  entityModel?: ClassType<Entity>;
-  /**
-   * Used only if the service has not external injected dependency rather than the repository
-   */
-  providerClass?: ClassType<GenericService<Entity>>;
-}
-
-interface DataLoaderOptions<Entity> {
-  databaseKey: keyof Entity;
-  entityModel?: ClassType<Entity>;
 }
 
 export function getEntityRelations<Entity, DTO = Entity>(
