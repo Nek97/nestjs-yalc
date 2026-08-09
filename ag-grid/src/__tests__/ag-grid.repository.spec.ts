@@ -109,6 +109,7 @@ describe('AgGrid Repoository', () => {
     mockedQueryBuilder.getManyAndCount = jest
       .fn()
       .mockReturnValue([getManyResult, 1]);
+    mockedQueryBuilder.getCount = jest.fn().mockReturnValue(1);
     mockedQueryBuilder.getQuery = jest
       .fn()
       .mockReturnValue('SELECT * FROM fakeTable');
