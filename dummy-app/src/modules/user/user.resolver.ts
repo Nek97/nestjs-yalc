@@ -5,23 +5,23 @@ import { AgGridArgs } from '@nestjs-yalc/ag-grid/ag-grid-args.decorator';
 import { AgGridFindManyOptions } from '@nestjs-yalc/ag-grid/ag-grid.interface';
 import { GqlError } from '@nestjs-yalc/graphql/plugins/gql.error';
 
-@Resolver(() => UserEntity)
+@Resolver((): typeof UserEntity => UserEntity)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Query(() => [UserEntity])
+  @Query((): (typeof UserEntity)[] => [UserEntity])
   getUsers(
     @AgGridArgs({ entityType: UserEntity }) agGridArgs: AgGridFindManyOptions<UserEntity>,
   ): Promise<UserEntity[]> {
     return this.userService.getEntityListAgGrid(agGridArgs);
   }
 
-  @Query(() => String)
+  @Query((): StringConstructor => String)
   throwError(): string {
     throw new GqlError('Intentional error for testing', 'TEST_ERROR');
   }
 
-  @Mutation(() => UserEntity)
+  @Mutation((): typeof UserEntity => UserEntity)
   async createUser(
     @Args('firstName') firstName: string,
     @Args('lastName') lastName: string,

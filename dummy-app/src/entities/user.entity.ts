@@ -18,7 +18,7 @@ export class UserEntity {
   @Column()
   lastName: string;
 
-  @Field(() => String, { middleware: [decimalMiddleware] })
+  @Field((): StringConstructor => String, { middleware: [decimalMiddleware] })
   @Column('decimal', { precision: 10, scale: 2, default: 0 })
   balance: string;
 
@@ -26,7 +26,7 @@ export class UserEntity {
   @Column('int')
   age: number;
 
-  @Field(() => [PostEntity], { nullable: 'itemsAndList' })
-  @OneToMany(() => PostEntity, (post) => post.user, { cascade: true })
+  @Field((): [typeof PostEntity] => [PostEntity], { nullable: 'itemsAndList' })
+  @OneToMany((): typeof PostEntity => PostEntity, (post): UserEntity => post.user, { cascade: true })
   posts?: PostEntity[];
 }
