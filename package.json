@@ -78,7 +78,6 @@
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
     "@golevelup/ts-jest": "^3.0.0",
-    "@types/faker": "^6.6.11",
     "@types/jest": "^29.5.14",
     "@types/pino": "^7.0.4",
     "@typescript-eslint/eslint-plugin": "^8.66.0",
