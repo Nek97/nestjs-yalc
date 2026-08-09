@@ -10,7 +10,7 @@ import { PostgresDriver } from 'typeorm/driver/postgres/PostgresDriver';
 import { CockroachDriver } from 'typeorm/driver/cockroachdb/CockroachDriver';
 import { SortDirection } from '@nestjs-yalc/ag-grid/ag-grid.enum';
 import {
-  IFieldMapper,
+  FieldMapper,
   isFieldMapper,
 } from '@nestjs-yalc/interfaces/maps.interface';
 import { isJsonSQLRaw } from './json.helpers';
@@ -220,17 +220,17 @@ export class QueryBuilderHelper {
 
   public static getMapper(
     fieldMap: {
-      parent: IFieldMapper;
-      joined: IFieldMapper | { [key: string]: IFieldMapper };
+      parent: FieldMapper;
+      joined: FieldMapper | { [key: string]: FieldMapper };
     },
     alias: string,
-  ): IFieldMapper {
+  ): FieldMapper {
     return isFieldMapper(fieldMap.joined)
       ? fieldMap.joined
       : fieldMap.joined[alias];
   }
 
-  public static convertFieldWithMap(field: string, map: IFieldMapper) {
+  public static convertFieldWithMap(field: string, map: FieldMapper) {
     if (field in map) {
       return map[field].dst;
     }
@@ -241,13 +241,13 @@ export class QueryBuilderHelper {
     findOptions: FindManyOptions,
     parentName: string,
     fieldMap?: {
-      parent: IFieldMapper;
-      joined: IFieldMapper | { [key: string]: IFieldMapper };
+      parent: FieldMapper;
+      joined: FieldMapper | { [key: string]: FieldMapper };
     },
   ): { key: string; operator: SortDirection }[] {
     const sortingColumns: any[] = [];
     let alias: string;
-    let mapper: IFieldMapper;
+    let mapper: FieldMapper;
     for (const key in findOptions.order as ObjectLiteral) {
       //If is a nested resource we need to change the name format into Parent__Joined_resource
       if (key.includes('.') && fieldMap) {
@@ -287,8 +287,8 @@ export class QueryBuilderHelper {
     key: string,
     alias?: string,
     fieldMap?: {
-      parent: IFieldMapper;
-      joined: IFieldMapper | { [key: string]: IFieldMapper };
+      parent: FieldMapper;
+      joined: FieldMapper | { [key: string]: FieldMapper };
     },
   ): string {
     /**

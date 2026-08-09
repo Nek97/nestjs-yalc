@@ -2,7 +2,7 @@ import { ArgsType, Field } from '@nestjs/graphql';
 import { FilterInput } from './ag-grid.interface';
 import {
   filterExpressionInputFactory,
-  ISortModelStrict,
+  SortModelStrict,
   JoinArgOptions,
   SortModel,
   sortModelFactory,
@@ -12,27 +12,27 @@ import returnValue from '@nestjs-yalc/utils/returnValue';
 import { ClassType } from '@nestjs-yalc/types';
 import { RowDefaultValues } from './ag-grid.enum';
 
-export interface IAgQueryParams<T = any> {
+export interface AgQueryParams<T = any> {
   [index: string]: any; // dynamic parameters
   startRow?: number;
   endRow?: number;
-  sorting?: ISortModelStrict<T>[];
+  sorting?: SortModelStrict<T>[];
   filters?: FilterInput;
   join?: { [index: string]: JoinArgOptions };
 }
 
 export const typeMap = new WeakMap();
 export function agQueryParamsFactory(
-  defaultValues?: IAgQueryParams,
+  defaultValues?: AgQueryParams,
   entityModel?: ClassType,
-): { new (): IAgQueryParams } {
+): { new (): AgQueryParams } {
   const SortType = entityModel ? [sortModelFactory(entityModel)] : [SortModel];
   const FilterType = entityModel
     ? filterExpressionInputFactory(entityModel)
     : FilterScalar;
 
   @ArgsType()
-  class AgQueryParams implements IAgQueryParams {
+  class AgQueryParams implements AgQueryParams {
     startRow: number = defaultValues?.startRow ?? RowDefaultValues.START_ROW;
     endRow: number = defaultValues?.endRow ?? RowDefaultValues.END_ROW;
     @Field(returnValue(SortType), {
@@ -52,16 +52,16 @@ export function agQueryParamsFactory(
 }
 
 export function agQueryParamsNoPaginationFactory(
-  defaultValues?: IAgQueryParams,
+  defaultValues?: AgQueryParams,
   entityModel?: ClassType,
-): { new (): IAgQueryParams } {
+): { new (): AgQueryParams } {
   const SortType = entityModel ? [sortModelFactory(entityModel)] : [SortModel];
   const FilterType = entityModel
     ? filterExpressionInputFactory(entityModel)
     : FilterScalar;
 
   @ArgsType()
-  class AgQueryParams implements IAgQueryParams {
+  class AgQueryParams implements AgQueryParams {
     @Field(returnValue(SortType), {
       nullable: true,
       defaultValue: defaultValues?.sorting,

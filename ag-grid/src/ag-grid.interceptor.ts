@@ -5,7 +5,7 @@ import {
   CallHandler,
 } from '@nestjs/common';
 import { map } from 'rxjs/operators';
-import { IFieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
+import { FieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 export function agGridInterceptorWorker<T>(startRow: number, endRow: number) {
@@ -17,7 +17,7 @@ export function agGridInterceptorWorker<T>(startRow: number, endRow: number) {
   };
 }
 @Injectable()
-export class AgGridInterceptor<T = IFieldMapper> implements NestInterceptor<T> {
+export class AgGridInterceptor<T = FieldMapper> implements NestInterceptor<T> {
   intercept(context: ExecutionContext, next: CallHandler) {
     const gqlCtx = GqlExecutionContext.create(context);
     const { startRow, endRow } = gqlCtx.getArgs();

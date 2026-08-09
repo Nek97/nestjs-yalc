@@ -4,7 +4,7 @@ import {
 } from '@nestjs-yalc/data-loader/dataloader.helper';
 import { QueryBuilderHelper } from '@nestjs-yalc/database/query-builder.helper';
 import {
-  IFieldMapper,
+  FieldMapper,
   isFieldMapper,
 } from '@nestjs-yalc/interfaces/maps.interface';
 import { ClassType } from '@nestjs-yalc/types';
@@ -33,7 +33,7 @@ import {
 } from './ag-grid.error';
 import { JoinArgOptions, JoinTypes } from './ag-grid.input';
 import {
-  IExtraArg,
+  ExtraArg,
   AgGridFindManyOptions,
   FilterInput,
 } from './ag-grid.interface';
@@ -43,13 +43,13 @@ import {
 } from './ag-grid.repository';
 import {
   findOperatorTypes,
-  IFilterArg,
-  IWhereCondition,
-  IWhereConditionType,
-  IWhereFilters,
+  FilterArg,
+  WhereCondition,
+  WhereConditionType,
+  WhereFilters,
 } from './ag-grid.type';
 import {
-  IGenericResolverOptions,
+  GenericResolverOptions,
   resolverFactory,
 } from './generic-resolver.resolver';
 import {
@@ -60,13 +60,13 @@ import {
   DstExtended,
   getAgGridFieldMetadataList,
   getAgGridObjectMetadata,
-  IAgGridFieldMetadata,
-  IFieldAndFilterMapper,
+  AgGridFieldMetadata,
+  FieldAndFilterMapper,
   isDstExtended,
 } from './object.decorator';
 export const columnConversion = (
   key: string,
-  data: IFieldMapper | { [key: string]: IAgGridFieldMetadata } | undefined,
+  data: FieldMapper | { [key: string]: AgGridFieldMetadata } | undefined,
 ): string => {
   if (data) {
     const dst = data[key]?.dst ?? key;
@@ -77,7 +77,7 @@ export const columnConversion = (
 };
 
 export const getFieldMapperSrcByDst = (
-  data: IFieldMapper | undefined,
+  data: FieldMapper | undefined,
   dst: string,
 ): string => {
   if (data) {
@@ -90,7 +90,7 @@ export const getFieldMapperSrcByDst = (
 };
 
 export const isSymbolic = (
-  data: IFieldMapper | undefined,
+  data: FieldMapper | undefined,
   key: string,
 ): boolean => {
   if (data && data[key]) {
@@ -101,10 +101,10 @@ export const isSymbolic = (
 };
 
 export const forceFilters = (
-  where: IWhereCondition | string | undefined,
-  properties: IFilterArg[],
-  fieldMap: IFieldMapper | undefined,
-): IWhereCondition => {
+  where: WhereCondition | string | undefined,
+  properties: FilterArg[],
+  fieldMap: FieldMapper | undefined,
+): WhereCondition => {
   // typeORM where property can be a string as type but we do not allow to use
   // string with this filter. Should never happen though
   if (typeof where === 'string') {
@@ -129,11 +129,11 @@ export const forceFilters = (
 };
 
 export const forceFilterWorker = (
-  where: IWhereCondition | undefined,
+  where: WhereCondition | undefined,
   target: string,
   value: findOperatorTypes,
-  descriptors?: IExtraArg,
-): IWhereCondition => {
+  descriptors?: ExtraArg,
+): WhereCondition => {
   const filter = descriptors
     ? getFindOperator(
         descriptors.filterType,
@@ -154,11 +154,11 @@ export const forceFilterWorker = (
 
 export function whereObjectToSqlString<Entity extends ObjectLiteral>(
   queryBuilder: SelectQueryBuilder<Entity> | undefined,
-  where: IWhereCondition,
+  where: WhereCondition,
   alias?: string,
   fieldMap?: {
-    parent: IFieldMapper;
-    joined: IFieldMapper | { [key: string]: IFieldMapper };
+    parent: FieldMapper;
+    joined: FieldMapper | { [key: string]: FieldMapper };
   },
 ) {
   let sql = '';
@@ -182,7 +182,7 @@ export function whereObjectToSqlString<Entity extends ObjectLiteral>(
   if (!where.filters) return sql;
 
   for (const key of Object.keys(where.filters)) {
-    const operation: IWhereConditionType = where.filters[key];
+    const operation: WhereConditionType = where.filters[key];
 
     //If we have an operator it means that the filter is combined, or it is a multicolumn
     if ((operation as any).operator !== undefined) {
@@ -264,11 +264,11 @@ export function getDestinationFieldName(dst: string | DstExtended): string {
 const objectToFieldMapperCache = new WeakMap();
 export const objectToFieldMapper = (
   object:
-    | IFieldMapper
-    | IFieldAndFilterMapper
+    | FieldMapper
+    | FieldAndFilterMapper
     | ReturnTypeFuncValue
     | ClassType,
-): IFieldAndFilterMapper => {
+): FieldAndFilterMapper => {
   if (typeof object !== 'symbol') {
     const cached = objectToFieldMapperCache.get(object);
     if (cached) {
@@ -276,7 +276,7 @@ export const objectToFieldMapper = (
     }
   }
 
-  let fieldMapper: IFieldAndFilterMapper = { field: {} };
+  let fieldMapper: FieldAndFilterMapper = { field: {} };
 
   fieldMapper.extraInfo = {};
 
@@ -311,7 +311,7 @@ export const objectToFieldMapper = (
   } else if (isFieldMapper(object)) {
     fieldMapper.field = object;
   } else if (isIFieldAndFilterMapper(object as any)) {
-    fieldMapper = object as IFieldAndFilterMapper;
+    fieldMapper = object as FieldAndFilterMapper;
   } /**
   @todo rework or delete, it throws an error with enum as gqlType
   
@@ -331,17 +331,17 @@ export const objectToFieldMapper = (
 };
 
 export function isIFieldAndFilterMapper(
-  val: IFieldMapper | IFieldAndFilterMapper,
-): val is IFieldAndFilterMapper {
+  val: FieldMapper | FieldAndFilterMapper,
+): val is FieldAndFilterMapper {
   return val?.field !== undefined;
 }
 
-export interface IDependencyObject<Entity extends ObjectLiteral> {
+export interface DependencyObject<Entity extends ObjectLiteral> {
   providers: Array<FactoryProvider | Provider>;
   repository: ClassType<AgGridRepository<Entity>>;
 }
 
-export interface IProviderOverride<T = any> {
+export interface ProviderOverride<T = any> {
   provider:
     | ClassProvider<T>
     | ValueProvider<T>
@@ -349,11 +349,11 @@ export interface IProviderOverride<T = any> {
     | ExistingProvider<T>;
 }
 
-export interface IResolverOverride<T = any> {
+export interface ResolverOverride<T = any> {
   provider: ClassType<T>;
 }
 
-interface IGenericServiceOptions<Entity extends ObjectLiteral> {
+interface GenericServiceOptions<Entity extends ObjectLiteral> {
   dbConnection: string;
   entityModel?: ClassType<Entity>;
   /**
@@ -362,26 +362,26 @@ interface IGenericServiceOptions<Entity extends ObjectLiteral> {
   providerClass?: ClassType<GenericService<Entity>>;
 }
 
-interface IDataLoaderOptions<Entity> {
+interface DataLoaderOptions<Entity> {
   databaseKey: keyof Entity;
   entityModel?: ClassType<Entity>;
 }
 
-export interface IAgGridDependencyFactoryOptions<Entity extends ObjectLiteral> {
+export interface AgGridDependencyFactoryOptions<Entity extends ObjectLiteral> {
   entityModel: ClassType<Entity>;
   resolver?:
-    | Omit<IGenericResolverOptions<Entity>, 'entityModel'>
-    | IResolverOverride
+    | Omit<GenericResolverOptions<Entity>, 'entityModel'>
+    | ResolverOverride
     | false;
-  service?: IGenericServiceOptions<Entity> | IProviderOverride;
-  dataloader?: IDataLoaderOptions<Entity> | IProviderOverride;
+  service?: GenericServiceOptions<Entity> | ProviderOverride;
+  dataloader?: DataLoaderOptions<Entity> | ProviderOverride;
   repository?: ClassType<AgGridRepository<Entity>>;
 }
 
 export function isProviderOverride(
   resolver: any,
-): resolver is IProviderOverride {
-  const casted = resolver as IProviderOverride;
+): resolver is ProviderOverride {
+  const casted = resolver as ProviderOverride;
   return !!casted.provider;
 }
 
@@ -391,10 +391,10 @@ export function AgGridDependencyFactory<Entity extends ObjectLiteral>({
   resolver,
   service,
   repository,
-}: IAgGridDependencyFactoryOptions<Entity>): IDependencyObject<Entity> {
+}: AgGridDependencyFactoryOptions<Entity>): DependencyObject<Entity> {
   const providers: Provider[] = [];
 
-  const resolverOptions: IGenericResolverOptions<Entity> = {
+  const resolverOptions: GenericResolverOptions<Entity> = {
     ...(resolver ?? {}),
     entityModel,
   };
@@ -493,16 +493,16 @@ export function filterTypeToNativeType(type: FilterType) {
   );
 }
 
-export interface IRelationInfo {
+export interface RelationInfo {
   relation: RelationMetadataArgs;
   join: JoinColumnMetadataArgs | undefined;
-  agField?: IAgGridFieldMetadata;
+  agField?: AgGridFieldMetadata;
 }
 
 export function getEntityRelations<Entity, DTO = Entity>(
   entityModel: ClassType<Entity>,
   dto?: ClassType<DTO>,
-): IRelationInfo[] {
+): RelationInfo[] {
   const relations = getMetadataArgsStorage().relations.filter(
     (v) =>
       typeof v.target !== 'string' &&
@@ -576,7 +576,7 @@ export function applyJoinArguments(
   findManyOptions: AgGridFindManyOptions,
   alias: string,
   join: { [index: string]: JoinArgOptions },
-  fieldMapper: { [key: string]: IAgGridFieldMetadata },
+  fieldMapper: { [key: string]: AgGridFieldMetadata },
 ): void {
   const _joinObject: {
     alias: string;
@@ -601,7 +601,7 @@ export function applyJoinArguments(
     }
 
     const type = fieldMapper[table].gqlType?.();
-    const _fieldMapper: IFieldAndFilterMapper = type
+    const _fieldMapper: FieldAndFilterMapper = type
       ? objectToFieldMapper(type)
       : { field: {} };
 
@@ -631,10 +631,10 @@ export function isFilterExpressionInput(
 }
 
 export function traverseFiltersAndApplyFunction(
-  where: IWhereCondition,
-  callback: { (value: IWhereFilters, key: string): void },
+  where: WhereCondition,
+  callback: { (value: WhereFilters, key: string): void },
 ): void {
-  const filters: IWhereFilters = where.filters;
+  const filters: WhereFilters = where.filters;
 
   for (const filter in filters) {
     callback(filters, filter);
@@ -678,7 +678,7 @@ export function formatRawSelection(
 export function applySelectOnFind<T = any>(
   findOptions: AgGridFindManyOptions,
   field: keyof T,
-  fieldMapper: { [key: string]: IAgGridFieldMetadata },
+  fieldMapper: { [key: string]: AgGridFieldMetadata },
   alias = '',
   /**
    * If it's a nested field, you need to specify a path

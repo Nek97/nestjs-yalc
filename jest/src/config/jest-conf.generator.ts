@@ -8,16 +8,16 @@ import defaultConf, {
 } from './jest-def.config';
 import yargs from 'yargs';
 
-interface IAppDep {
+interface AppDep {
   name: string;
   path: string;
 }
-export interface IAppProjSetting {
+export interface AppProjSetting {
   confOverride?: any;
-  deps: IAppDep[];
+  deps: AppDep[];
 }
 
-export interface IOptions {
+export interface Options {
   skipProjects: string[];
 }
 
@@ -33,9 +33,9 @@ export function jestConfGenerator(
   rootPath: string,
   projectList: { [key: string]: string },
   appProjectsSettings: {
-    [key: string]: IAppProjSetting;
+    [key: string]: AppProjSetting;
   },
-  options: IOptions,
+  options: Options,
 ) {
   const createProjectSets = (projects: any[]) => {
     const _projectSets: { [key: string]: any } = {};

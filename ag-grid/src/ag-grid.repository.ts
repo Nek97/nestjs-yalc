@@ -2,7 +2,7 @@ import {
   QueryBuilderHelper,
   ReplicationMode,
 } from '@nestjs-yalc/database/query-builder.helper';
-import { IFieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
+import { FieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
 import { ClassType } from '@nestjs-yalc/types';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import {
@@ -17,8 +17,8 @@ import {
   whereObjectToSqlString,
 } from './ag-grid.helpers';
 import { AgGridFindManyOptions } from './ag-grid.interface';
-import { IWhereFilters } from './ag-grid.type';
-import { IAgGridFieldMetadata } from './object.decorator';
+import { WhereFilters } from './ag-grid.type';
+import { AgGridFieldMetadata } from './object.decorator';
 import './query-builder.helpers'; // must be imported here
 
 export const AG_GRID_MAIN_ALIAS = 'AgGridMainAlias';
@@ -47,8 +47,8 @@ export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<E
   public getFormattedAgGridQueryBuilder(
     findOptions: AgGridFindManyOptions<Entity>,
     fieldMap?: {
-      parent: IFieldMapper;
-      joined: IFieldMapper | { [key: string]: IFieldMapper };
+      parent: FieldMapper;
+      joined: FieldMapper | { [key: string]: FieldMapper };
     },
     qb?: SelectQueryBuilder<Entity>,
   ): SelectQueryBuilder<Entity> {
@@ -73,7 +73,7 @@ export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<E
       strippedFindOptions.select = [];
     }
 
-    let queryBuilder = qb ?? this.createQueryBuilder(extra?._aliasType);
+    const queryBuilder = qb ?? this.createQueryBuilder(extra?._aliasType);
 
     const rawSelection: string[] = [];
     const joinSelection: string[] = [];
@@ -119,7 +119,7 @@ export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<E
          * in order to apply the extra conditions
          */
         Object.keys(joinInfo).forEach((key) => {
-          const fieldInfo = extra?._fieldMapper?.[key] as IAgGridFieldMetadata;
+          const fieldInfo = extra?._fieldMapper?.[key] as AgGridFieldMetadata;
 
           if (!fieldInfo?.relation) return;
 
@@ -196,8 +196,8 @@ export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<E
   public getAgGridQueryBuilder(
     findOptions: AgGridFindManyOptions<Entity>,
     fieldMap?: {
-      parent: IFieldMapper;
-      joined: IFieldMapper | { [key: string]: IFieldMapper };
+      parent: FieldMapper;
+      joined: FieldMapper | { [key: string]: FieldMapper };
     },
   ) {
     const queryBuilder = this.createQueryBuilder(findOptions.extra?._aliasType);
@@ -242,8 +242,8 @@ export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<E
   public async getManyAndCountAgGrid(
     findOptions: AgGridFindManyOptions<Entity>,
     fieldMap?: {
-      parent: IFieldMapper;
-      joined: IFieldMapper | { [key: string]: IFieldMapper };
+      parent: FieldMapper;
+      joined: FieldMapper | { [key: string]: FieldMapper };
     },
   ): Promise<[Entity[], number]> {
     // console.log('==========START QUERY==============');
@@ -277,8 +277,8 @@ export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<E
   public async getManyAgGrid(
     findOptions: AgGridFindManyOptions<Entity>,
     fieldMap?: {
-      parent: IFieldMapper;
-      joined: IFieldMapper | { [key: string]: IFieldMapper };
+      parent: FieldMapper;
+      joined: FieldMapper | { [key: string]: FieldMapper };
     },
   ): Promise<Entity[]> {
     const queryBuilder = this.getAgGridQueryBuilder(findOptions, fieldMap);
@@ -322,7 +322,7 @@ export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<E
    * @returns where filter with conditions on entity primaryColumn
    */
   public generateFilterOnPrimaryColumn(ids: any) {
-    const filters: IWhereFilters = {};
+    const filters: WhereFilters = {};
     const entityPrimaryColumn = this.metadata.primaryColumns.map(
       (x) => x.propertyName,
     );

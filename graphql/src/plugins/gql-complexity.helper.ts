@@ -19,7 +19,7 @@ const returnTypeMap: { [key: string]: string } = {
   User: 'UserType', // Temporary solution for wrong type returned by the 'User' in UserEmail object type.
 };
 
-interface IVisitedNode {
+interface VisitedNode {
   /** at which level the field has been visited */
   depth: number;
 }
@@ -76,7 +76,7 @@ export class GqlComplexityHelper {
 
   static findInvalidNode(
     node: FieldNode,
-    visitedNodes: { [key: string]: IVisitedNode },
+    visitedNodes: { [key: string]: VisitedNode },
     depth: number,
   ) {
     const { name, selectionSet } = node;
@@ -117,8 +117,8 @@ export class GqlComplexityHelper {
     }
   }
 
-  static getDefaultVisitedNodes(key: string): { [key: string]: IVisitedNode } {
-    const result: { [key: string]: IVisitedNode } = {};
+  static getDefaultVisitedNodes(key: string): { [key: string]: VisitedNode } {
+    const result: { [key: string]: VisitedNode } = {};
     const operationReturnType: string | undefined = returnTypeMap[key];
 
     if (operationReturnType) {
@@ -130,7 +130,7 @@ export class GqlComplexityHelper {
 
   static processSelectionNodes(
     selections: SelectionNode[],
-    visitedNodes: { [key: string]: IVisitedNode },
+    visitedNodes: { [key: string]: VisitedNode },
     depth: number,
   ) {
     for (const node of GqlASTHelper.filterFieldNodes(selections)) {

@@ -1,4 +1,4 @@
-import { FieldMapperProperty, IFieldMapper } from '@nestjs-yalc/interfaces';
+import { FieldMapperProperty, FieldMapper } from '@nestjs-yalc/interfaces';
 import { ClassType } from '@nestjs-yalc/types/globals';
 import { isClass } from '@nestjs-yalc/utils/class.helper';
 import {
@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import 'reflect-metadata';
 import { RelationType } from 'typeorm/metadata/types/RelationTypes';
-import { IAgQueryParams } from './ag-grid.args';
+import { AgQueryParams } from './ag-grid.args';
 
 export interface DstExtended {
   name: string;
@@ -20,7 +20,7 @@ export function isDstExtended(dst: string | DstExtended): dst is DstExtended {
   return !!_dst.name && !!_dst.transformer;
 }
 
-export interface IAgGridFieldMetadata<T = any>
+export interface AgGridFieldMetadata<T = any>
   extends Omit<FieldMapperProperty, 'dst'> {
   dst?: string | DstExtended;
   src?: string;
@@ -45,7 +45,7 @@ export interface IAgGridFieldMetadata<T = any>
    * To specify if it's a resource that can be loaded with a dataLoader/join
    */
   relation?: {
-    defaultValue?: IAgQueryParams<T>;
+    defaultValue?: AgQueryParams<T>;
     sourceKey: { dst: string; alias: string };
     /**
      * this is the field that will be used for both the dataloader and the join
@@ -74,7 +74,7 @@ export const AgGridField = <T = any>({
   gqlType,
   gqlOptions,
   ...options
-}: IAgGridFieldMetadata<T>): PropertyDecorator => {
+}: AgGridFieldMetadata<T>): PropertyDecorator => {
   return (target: any, property: string | symbol) => {
     const classConstructor = target.constructor;
     const propertyName = property.toString();
@@ -114,7 +114,7 @@ export const AgGridField = <T = any>({
 
 export const getAgGridFieldMetadataList = (
   target: Record<string, unknown> | ClassType,
-): { [key: string]: IAgGridFieldMetadata } | undefined => {
+): { [key: string]: AgGridFieldMetadata } | undefined => {
   return Reflect.getMetadata(AGGRID_FIELD_METADATA_KEY, getPrototype(target));
 };
 
@@ -127,7 +127,7 @@ export const hasAgGridFieldMetadataList = (
 export const getAgGridFieldMetadata = (
   target: Record<string, unknown> | ClassType,
   propertyName: string | symbol,
-): IAgGridFieldMetadata | undefined => {
+): AgGridFieldMetadata | undefined => {
   const metadata = getAgGridFieldMetadataList(target);
 
   const name = propertyName.toString();
@@ -204,8 +204,8 @@ export type AgGridObjectOptions = {
   filters?: FilterOption;
 };
 
-export interface IFieldAndFilterMapper {
-  field: IFieldMapper;
+export interface FieldAndFilterMapper {
+  field: FieldMapper;
   //When filterOption is set we can manage filters on fields with an inclusion/exclusion strategy
   filterOption?: FilterOption;
   extraInfo?: { [key: string]: any };

@@ -1,13 +1,13 @@
-interface IIsObject {
+interface IsObject {
   (item: any): boolean;
 }
 
-interface IObject {
+interface Object {
   [key: string]: any;
 }
 
-interface IDeepMerge {
-  (target: IObject, ...sources: Array<IObject>): IObject;
+interface DeepMerge {
+  (target: Object, ...sources: Array<Object>): Object;
 }
 
 /**
@@ -16,7 +16,7 @@ interface IDeepMerge {
  * @param item - The item that needs to be checked
  * @return {Boolean} Whether or not @item is an object
  */
-export const isObject: IIsObject = (item: any): boolean => {
+export const isObject: IsObject = (item: any): boolean => {
   return item === Object(item) && !Array.isArray(item);
 };
 
@@ -26,16 +26,16 @@ export const isObject: IIsObject = (item: any): boolean => {
  * @param {Array<Object>} sources - The source(s) that will be used to update the @target object
  * @return {Object} The final merged object
  */
-export const deepMerge: IDeepMerge = (
-  target: IObject,
-  ...sources: Array<IObject>
-): IObject => {
+export const deepMerge: DeepMerge = (
+  target: Object,
+  ...sources: Array<Object>
+): Object => {
   // return the target if no sources passed
   if (!sources.length) {
     return target;
   }
 
-  const result: IObject = target;
+  const result: Object = target;
 
   if (isObject(result)) {
     const len: number = sources.length;

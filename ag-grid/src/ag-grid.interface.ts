@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { IFieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
+import { FieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
 import { ClassType } from '@nestjs-yalc/types';
 import {
   ArgsOptions,
@@ -9,29 +9,29 @@ import {
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 import { FindManyOptions, FindOperator } from 'typeorm';
-import { IAgQueryParams } from './ag-grid.args';
+import { AgQueryParams } from './ag-grid.args';
 import {
   ExtraArgsStrategy,
   FilterType,
   GeneralFilters,
   Operators,
 } from './ag-grid.enum';
-import { IWhereCondition } from './ag-grid.type';
-import type { IKeyMeta } from './gqlfields.decorator';
-import { IFieldAndFilterMapper } from './object.decorator';
+import { WhereCondition } from './ag-grid.type';
+import type { KeyMeta } from './gqlfields.decorator';
+import { FieldAndFilterMapper } from './object.decorator';
 
-export interface IBaseFilterModel {
+export interface BaseFilterModel {
   filterType: FilterType;
   field: string;
 }
 
-export interface ISimpleFilterModel extends IBaseFilterModel {
+export interface SimpleFilterModel extends BaseFilterModel {
   type: GeneralFilters;
 
   filter?: string | number;
 }
 
-export interface ITextFilterModel extends ISimpleFilterModel {
+export interface TextFilterModel extends SimpleFilterModel {
   // always 'text' for text filter
   filterType: FilterType.TEXT;
 
@@ -44,13 +44,13 @@ export interface ITextFilterModel extends ISimpleFilterModel {
   filter?: string;
 }
 
-export interface ISetFilterModel extends IBaseFilterModel {
+export interface SetFilterModel extends BaseFilterModel {
   filterType: FilterType.SET;
 
   values: (string | number)[];
 }
 
-export interface INumberFilterModel extends ISimpleFilterModel {
+export interface NumberFilterModel extends SimpleFilterModel {
   // always 'number' for number filter
   filterType: FilterType.NUMBER;
 
@@ -64,7 +64,7 @@ export interface INumberFilterModel extends ISimpleFilterModel {
   filterTo?: number;
 }
 
-export interface DateFilterModel extends ISimpleFilterModel {
+export interface DateFilterModel extends SimpleFilterModel {
   // always 'date' for date filter
   filterType: FilterType.DATE;
 
@@ -80,16 +80,16 @@ export interface DateFilterModel extends ISimpleFilterModel {
 }
 
 export type GenericFilterModel =
-  | ISimpleFilterModel
-  | ITextFilterModel
-  | INumberFilterModel;
+  | SimpleFilterModel
+  | TextFilterModel
+  | NumberFilterModel;
 
 export type FilterModel =
   | GenericFilterModel
   | DateFilterModel
-  | ISetFilterModel;
+  | SetFilterModel;
 
-export interface ICombinedSimpleModel {
+export interface CombinedSimpleModel {
   // the filter type: date, number or text
   filterType: FilterType;
 
@@ -100,66 +100,66 @@ export interface ICombinedSimpleModel {
   condition2: FilterModel;
 }
 
-export type FilterInputStrict = (FilterModel | ICombinedSimpleModel)[];
+export type FilterInputStrict = (FilterModel | CombinedSimpleModel)[];
 
-export interface IMultiColumnProperty {
-  multiColumnJoinOptions?: IMultiColumnJoinOptions;
+export interface MultiColumnProperty {
+  multiColumnJoinOptions?: MultiColumnJoinOptions;
 }
 
-export interface IMultiColumnObject extends IMultiColumnProperty {
+export interface MultiColumnObject extends MultiColumnProperty {
   multiColumnJoinOperator: Operators;
 }
 
 /**
  * @deprecated
  */
-export type IFilterInputOld = {
+export type FilterInputOld = {
   [key: string]:
     | FilterModel
-    | ICombinedSimpleModel
-    | IMultiColumnJoinOptions
+    | CombinedSimpleModel
+    | MultiColumnJoinOptions
     | undefined;
-} & IMultiColumnProperty;
+} & MultiColumnProperty;
 
-export interface ITextFilter {
-  [FilterType.TEXT]: ITextFilterModel;
+export interface TextFilter {
+  [FilterType.TEXT]: TextFilterModel;
 }
 
-export interface INumberFilter {
-  [FilterType.NUMBER]: INumberFilterModel;
+export interface NumberFilter {
+  [FilterType.NUMBER]: NumberFilterModel;
 }
 
-export interface IDateFilter {
+export interface DateFilter {
   [FilterType.DATE]: DateFilterModel;
 }
 
-export interface ISetFilter {
-  [FilterType.SET]: ISetFilterModel;
+export interface SetFilter {
+  [FilterType.SET]: SetFilterModel;
 }
 
 // we should consider to implement the @oneOf
 // when it will be available: https://github.com/graphql/graphql-spec/pull/825
-export interface IFilterExpressionsProperty {
-  [FilterType.TEXT]?: ITextFilterModel;
-  [FilterType.NUMBER]?: INumberFilterModel;
+export interface FilterExpressionsProperty {
+  [FilterType.TEXT]?: TextFilterModel;
+  [FilterType.NUMBER]?: NumberFilterModel;
   [FilterType.DATE]?: DateFilterModel;
-  [FilterType.SET]?: ISetFilterModel;
+  [FilterType.SET]?: SetFilterModel;
   [FilterType.MULTI]?: never;
 }
 
 export type FilterExpressionType =
-  | ITextFilter
-  | INumberFilter
-  | IDateFilter
-  | ISetFilter;
+  | TextFilter
+  | NumberFilter
+  | DateFilter
+  | SetFilter;
 
 export interface FilterInput {
   operator?: Operators;
-  expressions?: IFilterExpressionsProperty[];
+  expressions?: FilterExpressionsProperty[];
   childExpressions?: FilterInput[];
 }
 
-export interface IAgGridFindExtraOptions {
+export interface AgGridFindExtraOptions {
   /** It apply limit and offset at the same level of the join instead of
    * wrapping the join with another query by applying the limit later
    */
@@ -181,36 +181,36 @@ export interface IAgGridFindExtraOptions {
   /**
    * Internally used
    */
-  _fieldMapper?: IFieldMapper;
-  _keysMeta?: { [key: string]: IKeyMeta };
+  _fieldMapper?: FieldMapper;
+  _keysMeta?: { [key: string]: KeyMeta };
   _aliasType?: string;
 }
 
 export interface AgGridFindManyOptions<T = any> extends Omit<FindManyOptions<T>, 'where'> {
-  where?: IWhereCondition;
+  where?: WhereCondition;
   /** Contains useful information about the graphql request */
   info?: GraphQLResolveInfo;
-  extra?: IAgGridFindExtraOptions;
+  extra?: AgGridFindExtraOptions;
   subQueryFilters?: AgGridFindManyOptions<T>;
 }
 
-export type IMultiColumnJoinOptions = {
+export type MultiColumnJoinOptions = {
   [key: string]:
     | FilterModel
-    | ICombinedSimpleModel
-    | IMultiColumnJoinOptions
+    | CombinedSimpleModel
+    | MultiColumnJoinOptions
     | Operators
     | undefined;
-} & IMultiColumnObject;
+} & MultiColumnObject;
 
-export interface ICombinedWhereModel {
+export interface CombinedWhereModel {
   operator: Operators;
   // two instances of the filter model
-  filter_1: FindOperator<string | number | Date | null> | ICombinedWhereModel;
-  filter_2: FindOperator<string | number | Date | null> | ICombinedWhereModel;
+  filter_1: FindOperator<string | number | Date | null> | CombinedWhereModel;
+  filter_2: FindOperator<string | number | Date | null> | CombinedWhereModel;
 }
 
-export interface IBaseArg {
+export interface BaseArg {
   /**
    *
    */
@@ -221,17 +221,17 @@ export interface IBaseArg {
   hidden?: boolean;
 }
 
-export interface IIDArg extends IBaseArg {
+export interface DArg extends BaseArg {
   name: string;
 }
 
-export interface IExtraArg extends IBaseArg {
+export interface ExtraArg extends BaseArg {
   options?: ArgsOptions;
   filterType: FilterType;
   filterCondition: GeneralFilters;
 }
 
-export interface IAgGridArgsSingleOptions {
+export interface AgGridArgsSingleOptions {
   /**
    * @property Options for the nestjs Args decorator
    */
@@ -240,7 +240,7 @@ export interface IAgGridArgsSingleOptions {
    * @deprecated use fieldType instead
    * @property fieldMap is used internally to convert names of exposed fields to database fields
    */
-  fieldMap?: IFieldMapper | IFieldAndFilterMapper;
+  fieldMap?: FieldMapper | FieldAndFilterMapper;
   /**
    * @property fieldType is used internally to retrieve information about the returned type
    */
@@ -251,14 +251,14 @@ export interface IAgGridArgsSingleOptions {
   entityType?: ClassType;
 }
 
-export interface IAgGridArgsOptions extends IAgGridArgsSingleOptions {
-  defaultValue?: IAgQueryParams;
+export interface AgGridArgsOptions extends AgGridArgsSingleOptions {
+  defaultValue?: AgQueryParams;
   /**
    * Filters with direct arguments
    */
   extraArgsStrategy?: ExtraArgsStrategy;
   extraArgs?: {
-    [index: string]: IExtraArg;
+    [index: string]: ExtraArg;
   };
   options?: {
     maxRow: number;

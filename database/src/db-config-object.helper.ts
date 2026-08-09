@@ -1,7 +1,7 @@
 import { envIsTrue } from '@nestjs-yalc/utils/env.helper';
 import { EntitySchema } from 'typeorm';
 import { Seeder } from 'typeorm-seeding';
-import { IDbConfObject } from './conf.interface';
+import { DbConfObject } from './conf.interface';
 import { getConnectionName } from './conn.helper';
 import { MysqlConnectionCredentialsOptions } from 'typeorm/driver/mysql/MysqlConnectionCredentialsOptions';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
@@ -34,7 +34,7 @@ export function buildDbConfigObject({
   extraMigrationDirs,
   connectionName,
   __seedAsync,
-}: DbConfigObjectParams): IDbConfObject {
+}: DbConfigObjectParams): DbConfObject {
   let connNameTemp = connectionName;
   if (!connNameTemp && dbName) {
     connNameTemp = dbName;
@@ -46,7 +46,7 @@ export function buildDbConfigObject({
   }
   const connName = getConnectionName(connNameTemp);
 
-  const dbConfObj: IDbConfObject = () => {
+  const dbConfObj: DbConfObject = () => {
     const noSelDb = envIsTrue(process.env.TYPEORM_NO_SEL_DB || 'false');
 
     const canLoad =

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import {
   agQueryParamsNoPaginationFactory,
-  IAgQueryParams,
+  AgQueryParams,
 } from './ag-grid.args';
 import {
   entityFieldsEnumFactory,
@@ -21,22 +21,22 @@ import { getEntityRelations } from './ag-grid.helpers';
 import {
   DateFilterModel,
   FilterInput,
-  IFilterExpressionsProperty,
-  INumberFilterModel,
-  ISetFilterModel,
-  ITextFilterModel,
+  FilterExpressionsProperty,
+  NumberFilterModel,
+  SetFilterModel,
+  TextFilterModel,
 } from './ag-grid.interface';
 
-export interface ISortModel<T = any> {
+export interface SortModel<T = any> {
   colId: keyof T | string;
   sort?: SortDirection;
 }
 
-export interface ISortModelString<T = any> extends ISortModel<T> {
+export interface SortModelString<T = any> extends SortModel<T> {
   colId: string;
 }
 
-export interface ISortModelStrict<T> extends ISortModel<T> {
+export interface SortModelStrict<T> extends SortModel<T> {
   colId: keyof T;
 }
 
@@ -44,7 +44,7 @@ export interface ISortModelStrict<T> extends ISortModel<T> {
  * @deprecated
  */
 @InputType()
-export class SortModel<T = any> implements ISortModel<T> {
+export class SortModel<T = any> implements SortModel<T> {
   colId!: string;
   @Field(
     /* istanbul ignore next */
@@ -61,7 +61,7 @@ export function sortModelFactory<Entity>(entityModel: ClassType<Entity>) {
 
   const fieldsEnum = entityFieldsEnumFactory(entityModel);
   @InputType(`${entityModel.name}SortModel`)
-  class SortModel implements ISortModelStrict<typeof fieldsEnum> {
+  class SortModel implements SortModelStrict<typeof fieldsEnum> {
     @Field(
       /* istanbul ignore next */
       () => fieldsEnum,
@@ -96,7 +96,7 @@ export function filterExpressionInputFactory<Entity>(
   const FieldEnum = entityFieldsEnumFactory(entityModel);
 
   @InputType(`${entityModel.name}FilterTextInput`)
-  class FilterText implements ITextFilterModel {
+  class FilterText implements TextFilterModel {
     @HideField()
     filterType: FilterType.TEXT;
     @Field(() => GeneralFilters)
@@ -111,7 +111,7 @@ export function filterExpressionInputFactory<Entity>(
   }
 
   @InputType(`${entityModel.name}FilterNumberInput`)
-  class FilterNumber implements INumberFilterModel {
+  class FilterNumber implements NumberFilterModel {
     @HideField()
     filterType: FilterType.NUMBER;
     @Field(() => GeneralFilters)
@@ -145,7 +145,7 @@ export function filterExpressionInputFactory<Entity>(
   }
 
   @InputType(`${entityModel.name}FilterSetInput`)
-  class FilterSet implements ISetFilterModel {
+  class FilterSet implements SetFilterModel {
     @HideField()
     filterType: FilterType.SET;
     @Field(() => [String])
@@ -162,7 +162,7 @@ export function filterExpressionInputFactory<Entity>(
    * @see https://github.com/graphql/graphql-spec/issues/488
    */
   @InputType(`${entityModel.name}FilterInput`)
-  class FilterExpressionProperty implements IFilterExpressionsProperty {
+  class FilterExpressionProperty implements FilterExpressionsProperty {
     @Field(
       /* istanbul ignore next */
       () => FilterText,
@@ -219,7 +219,7 @@ export enum JoinTypes {
   INNER_JOIN,
 }
 
-export interface JoinArgOptions extends IAgQueryParams {
+export interface JoinArgOptions extends AgQueryParams {
   joinType?: JoinTypes;
 }
 
@@ -227,7 +227,7 @@ export interface JoinArgOptions extends IAgQueryParams {
 const JoinOptionInputCache = new WeakMap();
 export function agJoinArgFactory<Entity>(
   entityModel: ClassType<Entity>,
-  defaultValues?: IAgQueryParams,
+  defaultValues?: AgQueryParams,
 ) {
   // return memoized result if any
   const cached = JoinOptionInputCache.get(entityModel);

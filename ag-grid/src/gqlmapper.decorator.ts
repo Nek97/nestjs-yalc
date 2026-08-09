@@ -2,7 +2,7 @@ import {
   columnConversion,
   objectToFieldMapper,
 } from '@nestjs-yalc/ag-grid/ag-grid.helpers';
-import { IFieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
+import { FieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
 import { ClassType } from '@nestjs-yalc/types';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import {
@@ -13,7 +13,7 @@ import {
 } from '@nestjs/graphql';
 import { ObjectLiteral } from 'typeorm';
 
-interface IInputArgsOptions {
+interface InputArgsOptions {
   /**
    * @property Options for the nestjs Args decorator
    */
@@ -22,7 +22,7 @@ interface IInputArgsOptions {
    * @property fieldMap is used internally to convert names of exposed fields to database fields
    * @deprecated use fieldType instead
    */
-  fieldMap?: IFieldMapper | undefined;
+  fieldMap?: FieldMapper | undefined;
   /**
    * @property fieldType is used internally to retrieve information about the returned type
    */
@@ -34,7 +34,7 @@ interface IInputArgsOptions {
 }
 
 export const GqlFieldsAsArgsWorker = (
-  data: IFieldMapper,
+  data: FieldMapper,
   info: ObjectLiteral,
 ) => {
   const keys: ObjectLiteral = {};
@@ -46,7 +46,7 @@ export const GqlFieldsAsArgsWorker = (
 };
 
 export const GqlArgsGenerator = (
-  data: IInputArgsOptions,
+  data: InputArgsOptions,
   ctx: ExecutionContext,
 ) => {
   const gqlCtx = GqlExecutionContext.create(ctx);
@@ -71,7 +71,7 @@ export const InputArgsMapper = createParamDecorator(GqlArgsGenerator);
  * This decorator declare the Args name for the playground, at the same time it applies the fieldMap to the Object
  * @returns the mapped params in the input object
  */
-export const InputArgs = (params: IInputArgsOptions) => {
+export const InputArgs = (params: InputArgsOptions) => {
   const args = Args(params._name ?? 'input', params.gql ?? {});
   const mapper = InputArgsMapper(params);
   return function (target: any, key: string, index: number) {

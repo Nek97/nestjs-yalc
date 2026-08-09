@@ -4,31 +4,31 @@ import {
   DateFilterModel,
   FilterInput,
   FilterModel,
-  ICombinedSimpleModel,
-  ICombinedWhereModel,
-  IMultiColumnJoinOptions,
-  INumberFilterModel,
-  ISetFilterModel,
-  ITextFilterModel,
+  CombinedSimpleModel,
+  CombinedWhereModel,
+  MultiColumnJoinOptions,
+  NumberFilterModel,
+  SetFilterModel,
+  TextFilterModel,
 } from './ag-grid.interface';
-import { findOperatorTypes, IWhereConditionType } from './ag-grid.type';
+import { findOperatorTypes, WhereConditionType } from './ag-grid.type';
 
 export function isFilterInputStrict(
   currentFilter:
     | FilterInput
     | FilterModel
-    | ICombinedSimpleModel
+    | CombinedSimpleModel
     | Operators
-    | IMultiColumnJoinOptions,
-): currentFilter is FilterModel | ICombinedSimpleModel {
+    | MultiColumnJoinOptions,
+): currentFilter is FilterModel | CombinedSimpleModel {
   return !isMulticolumnJoinOptions(currentFilter) && !isOperator(currentFilter);
 }
 
 export function isFilterModel(
   filter:
     | FilterModel
-    | ICombinedSimpleModel
-    | IMultiColumnJoinOptions
+    | CombinedSimpleModel
+    | MultiColumnJoinOptions
     | Operators
     | undefined,
 ): filter is FilterModel {
@@ -40,8 +40,8 @@ export function isFilterModel(
 }
 
 export function isTextFilterModel(
-  filter: FilterModel | ICombinedSimpleModel,
-): filter is ITextFilterModel | ICombinedSimpleModel {
+  filter: FilterModel | CombinedSimpleModel,
+): filter is TextFilterModel | CombinedSimpleModel {
   if (!filter) return false;
 
   if (isCombinedFilterModel(filter)) {
@@ -55,8 +55,8 @@ export function isTextFilterModel(
 }
 
 export function isNumberFilterModel(
-  filter: FilterModel | ICombinedSimpleModel,
-): filter is INumberFilterModel | ICombinedSimpleModel {
+  filter: FilterModel | CombinedSimpleModel,
+): filter is NumberFilterModel | CombinedSimpleModel {
   if (!filter) return false;
 
   if (isCombinedFilterModel(filter)) {
@@ -71,15 +71,15 @@ export function isNumberFilterModel(
 
 export function isSetFilterModel(
   filter: FilterModel,
-): filter is ISetFilterModel {
+): filter is SetFilterModel {
   if (!filter) return false;
 
   return filter.filterType === FilterType.SET;
 }
 
 export function isDateFilterModel(
-  filter: FilterModel | ICombinedSimpleModel,
-): filter is DateFilterModel | ICombinedSimpleModel {
+  filter: FilterModel | CombinedSimpleModel,
+): filter is DateFilterModel | CombinedSimpleModel {
   if (!filter) return false;
 
   if (isCombinedFilterModel(filter)) {
@@ -95,11 +95,11 @@ export function isDateFilterModel(
 export function isCombinedFilterModel(
   filter:
     | FilterModel
-    | ICombinedSimpleModel
-    | IMultiColumnJoinOptions
+    | CombinedSimpleModel
+    | MultiColumnJoinOptions
     | Operators
     | undefined,
-): filter is ICombinedSimpleModel {
+): filter is CombinedSimpleModel {
   const casted = filter as any;
   return (
     casted &&
@@ -110,9 +110,9 @@ export function isCombinedFilterModel(
 }
 
 export function isCombinedWhereModel(
-  filter: IWhereConditionType,
-): filter is ICombinedWhereModel {
-  const casted = filter as ICombinedWhereModel;
+  filter: WhereConditionType,
+): filter is CombinedWhereModel {
+  const casted = filter as CombinedWhereModel;
   return (
     casted &&
     casted.operator !== undefined &&
@@ -123,10 +123,10 @@ export function isCombinedWhereModel(
 
 export function isMulticolumnJoinOptions(
   filter: any,
-): filter is IMultiColumnJoinOptions {
+): filter is MultiColumnJoinOptions {
   return (
     filter &&
-    (<IMultiColumnJoinOptions>filter).multiColumnJoinOperator !== undefined
+    (<MultiColumnJoinOptions>filter).multiColumnJoinOperator !== undefined
   );
 }
 

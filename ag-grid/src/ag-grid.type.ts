@@ -2,7 +2,7 @@ import { ObjectType, Field, HideField } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';
 import { FindManyOptions, FindOperator } from 'typeorm';
 import returnValue from '@nestjs-yalc/utils/returnValue';
-import { IExtraArg, ICombinedWhereModel } from './ag-grid.interface';
+import { ExtraArg, CombinedWhereModel } from './ag-grid.interface';
 import { Operators } from './ag-grid.enum';
 
 @ObjectType()
@@ -17,21 +17,21 @@ export class PageDataAgGrid {
   public endRow!: number;
 }
 
-export interface IConnection {
+export interface Connection {
   name: string;
   nodes: any[];
   pageData: PageDataAgGrid;
 }
 
 export const typeMap: {
-  [key: string]: { new (name: string): IConnection };
+  [key: string]: { new (name: string): Connection };
 } = {};
 export default function AgGridGqlType<T>(type: Type<T>): any {
   const { name } = type;
   if (typeMap[`${name}`]) return typeMap[`${name}`];
 
   @ObjectType(`${name}Connection`, { isAbstract: true })
-  class Connection implements IConnection {
+  class Connection implements Connection {
     @HideField() // internally used
     public name = `${name}Connection`;
 
@@ -47,13 +47,13 @@ export default function AgGridGqlType<T>(type: Type<T>): any {
 
 export type findOperatorTypes = string | number | Date | undefined | null;
 
-export interface IGqlSelectedFields<T> {
+export interface GqlSelectedFields<T> {
   fields: (keyof T)[];
 }
 
-export interface IAgGridArgs<T>
+export interface AgGridArgs<T>
   extends FindManyOptions,
-    IGqlSelectedFields<T> {}
+    GqlSelectedFields<T> {}
 
 export interface RecursiveFindOperator<T> {
   [index: number]: RecursiveFindOperator<T> | FindOperator<T>;
@@ -65,32 +65,32 @@ export interface RecursiveAndFindOperator<T> {
   condition_2?: RecursiveAndFindOperator<T> | FindOperator<T>;
 }
 
-export type IWhereConditionType =
+export type WhereConditionType =
   | FindOperator<findOperatorTypes>
   | FindOperator<findOperatorTypes>[]
   | RecursiveFindOperator<findOperatorTypes>
   | RecursiveFindOperator<findOperatorTypes>[]
   | RecursiveAndFindOperator<findOperatorTypes>
   | RecursiveAndFindOperator<findOperatorTypes>[]
-  | ICombinedWhereModel;
+  | CombinedWhereModel;
 
-export type IWhereFilters = {
-  [key: string]: IWhereConditionType;
+export type WhereFilters = {
+  [key: string]: WhereConditionType;
 };
 
-export interface IWhereCondition {
+export interface WhereCondition {
   operator?: Operators;
-  filters: IWhereFilters;
-  childExpressions?: IWhereCondition[];
+  filters: WhereFilters;
+  childExpressions?: WhereCondition[];
 }
 
-export interface IFilterArg {
+export interface FilterArg {
   key: string;
   value: findOperatorTypes;
-  descriptors?: IExtraArg;
+  descriptors?: ExtraArg;
 }
 
-export interface ISelect {
+export interface Select {
   field: string;
   isRaw?: boolean;
   isNested?: boolean;

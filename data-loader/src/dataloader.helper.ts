@@ -2,7 +2,7 @@ import * as _DataLoader from 'dataloader';
 import { FindAndCountResult } from '@nestjs-yalc/database/query-builder.helper';
 import { AgGridFindManyOptions } from '@nestjs-yalc/ag-grid/ag-grid.interface';
 import { In } from 'typeorm';
-import { IWhereCondition } from '@nestjs-yalc/ag-grid/ag-grid.type';
+import { WhereCondition } from '@nestjs-yalc/ag-grid/ag-grid.type';
 import { Operators } from '@nestjs-yalc/ag-grid/ag-grid.enum';
 import {
   FactoryProvider,
@@ -41,7 +41,7 @@ class _DataLoaderWithCount<
   ) {
     super(async (keys: Readonly<string[]>): Promise<Entity[][]> => {
       // we force the filter based on dataloader keys
-      const where: IWhereCondition = {
+      const where: WhereCondition = {
         filters: { [searchKey]: In([...keys]) },
       };
 

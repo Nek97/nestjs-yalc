@@ -5,7 +5,7 @@ import { ConfigureOption } from 'typeorm-seeding/dist/connection';
 import { Injectable, LoggerService, Provider } from '@nestjs/common';
 import { Connection } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { IDbConfType } from './conf.interface';
+import { DbConfType } from './conf.interface';
 import { getConfNameByConnection } from './conn.helper';
 
 /**
@@ -27,7 +27,7 @@ export class SeedService {
   }
 
   private async clearDatabase(connection: Connection, name: string) {
-    const dbConf = this.configService.get<IDbConfType>(
+    const dbConf = this.configService.get<DbConfType>(
       getConfNameByConnection(connection.name),
     );
 
@@ -59,7 +59,7 @@ export class SeedService {
   }
 
   private async seedDatabase(connection: Connection, name: string) {
-    const dbConf = this.configService.get<IDbConfType>(
+    const dbConf = this.configService.get<DbConfType>(
       getConfNameByConnection(connection.name),
     );
 

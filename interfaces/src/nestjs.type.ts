@@ -6,7 +6,7 @@ export type ImportType =
   | Promise<DynamicModule>
   | ForwardReference<any>;
 
-export type IDecoratorType =
+export type DecoratorType =
   | ClassDecorator
   | MethodDecorator
   | PropertyDecorator;

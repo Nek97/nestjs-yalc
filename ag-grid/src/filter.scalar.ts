@@ -9,8 +9,8 @@ import { CustomWhereKeys } from './ag-grid.enum';
 import { AgGridBadFilterTypeError } from './ag-grid.error';
 import {
   FilterInput,
-  IFilterInputOld,
-  IMultiColumnJoinOptions,
+  FilterInputOld,
+  MultiColumnJoinOptions,
 } from './ag-grid.interface';
 
 @Scalar('FilterInput')
@@ -28,7 +28,7 @@ export class FilterScalar implements CustomScalar<string, FilterInput> {
     const parsedValue = JSON.parse(value);
 
     const normalizeInput = (
-      input: IFilterInputOld | IMultiColumnJoinOptions,
+      input: FilterInputOld | MultiColumnJoinOptions,
     ): FilterInput => {
       const _normalizedInput: FilterInput = {
         expressions: [],

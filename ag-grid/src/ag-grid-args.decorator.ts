@@ -14,9 +14,9 @@ import {
   IsNull,
 } from 'typeorm';
 import { GqlAgGridFieldsMapper } from '@nestjs-yalc/ag-grid/gqlfields.decorator';
-import { IFieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
+import { FieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
 import {
-  IAgQueryParams,
+  AgQueryParams,
   agQueryParamsFactory,
   agQueryParamsNoPaginationFactory,
 } from './ag-grid.args';
@@ -33,18 +33,18 @@ import {
   DateFilterModel,
   FilterInput,
   FilterModel,
-  ICombinedWhereModel,
-  ICombinedSimpleModel,
-  ISimpleFilterModel,
-  ISetFilterModel,
-  IAgGridArgsOptions,
-  IAgGridArgsSingleOptions,
+  CombinedWhereModel,
+  CombinedSimpleModel,
+  SimpleFilterModel,
+  SetFilterModel,
+  AgGridArgsOptions,
+  AgGridArgsSingleOptions,
 } from './ag-grid.interface';
 import {
   findOperatorTypes,
-  IFilterArg,
-  IWhereCondition,
-  IWhereConditionType,
+  FilterArg,
+  WhereCondition,
+  WhereConditionType,
 } from './ag-grid.type';
 import {
   applyJoinArguments,
@@ -214,8 +214,8 @@ export function getFindOperator(
 }
 
 export function convertFilter(
-  filter: FilterModel | ICombinedSimpleModel,
-): FindOperator<string | number | Date | null> | ICombinedWhereModel {
+  filter: FilterModel | CombinedSimpleModel,
+): FindOperator<string | number | Date | null> | CombinedWhereModel {
   if (isCombinedFilterModel(filter)) {
     if (
       filter.operator.toUpperCase() !== Operators.OR &&
@@ -247,12 +247,12 @@ export function convertFilter(
 
 export function resolveFilter(
   filter:
-    | ICombinedSimpleModel
-    | ISimpleFilterModel
+    | CombinedSimpleModel
+    | SimpleFilterModel
     | DateFilterModel
-    | ISetFilterModel,
-): IWhereConditionType {
-  let filterToApply: FindOperator<findOperatorTypes> | ICombinedWhereModel;
+    | SetFilterModel,
+): WhereConditionType {
+  let filterToApply: FindOperator<findOperatorTypes> | CombinedWhereModel;
   if (
     isTextFilterModel(filter) ||
     isNumberFilterModel(filter) ||
@@ -268,10 +268,10 @@ export function resolveFilter(
 
 export function createWhere(
   filtersObject: FilterInput,
-  fieldMapper: IFieldMapper | undefined,
+  fieldMapper: FieldMapper | undefined,
   alias?: string,
-  where: IWhereCondition = { filters: {} },
-): IWhereCondition {
+  where: WhereCondition = { filters: {} },
+): WhereCondition {
   if (!filtersObject) {
     return where;
   }
@@ -317,7 +317,7 @@ export function createWhere(
 
   // we skip the "filters" property of the first level and use the childExpressions
   // directly in order to be able processing conditions on same column name
-  const childExpressions: IWhereCondition[] = where.childExpressions ?? [];
+  const childExpressions: WhereCondition[] = where.childExpressions ?? [];
   for (const expr of filtersObjectCleared) {
     // for every property in the mapper or in the query we're checking if the relative filter exist
     const key = expr.field;
@@ -346,7 +346,7 @@ export function createWhere(
 
 export function removeSymbolicSelection(
   select: string[],
-  data: IFieldMapper | undefined,
+  data: FieldMapper | undefined,
   path: string,
 ): string[] {
   for (let i = 0; i < select.length; i++) {
@@ -359,7 +359,7 @@ export function removeSymbolicSelection(
 }
 
 export function checkFilterScope(
-  where: IWhereCondition,
+  where: WhereCondition,
   filterOption: FilterOption,
 ) {
   for (const key of Object.keys(where.filters)) {
@@ -380,13 +380,13 @@ export function checkFilterScope(
 }
 
 export function mapAgGridParams(
-  params: IAgGridArgsOptions | undefined,
+  params: AgGridArgsOptions | undefined,
   ctx: GqlExecutionContext,
-  args: IAgQueryParams,
+  args: AgQueryParams,
   info: GraphQLResolveInfo,
 ): AgGridFindManyOptions {
   let filterOption: FilterOption | undefined;
-  let fieldMapper: IFieldMapper = {};
+  let fieldMapper: FieldMapper = {};
   const fieldType = params?.fieldType ?? params?.fieldMap ?? params?.entityType;
 
   if (fieldType) {
@@ -473,7 +473,7 @@ export function mapAgGridParams(
       // nothing to do
     }
 
-    const forcedFilters: IFilterArg[] = [];
+    const forcedFilters: FilterArg[] = [];
     for (const argName of Object.keys(params.extraArgs)) {
       if (
         params.extraArgs[argName].filterCondition === GeneralFilters.VIRTUAL
@@ -526,7 +526,7 @@ export function mapAgGridParams(
 }
 
 export const AgGridArgsFactory = <T>(
-  data: IAgGridArgsOptions | undefined,
+  data: AgGridArgsOptions | undefined,
   ctx: ExecutionContext,
 ): AgGridFindManyOptions<T> => {
   const gqlCtx = GqlExecutionContext.create(ctx);
@@ -546,7 +546,7 @@ export const AgGridArgsMapper = createParamDecorator(AgGridArgsFactory);
 /**
  * Combine multiple param decorators
  */
-export const AgGridCombineDecorators = (params: IAgGridArgsOptions) => {
+export const AgGridCombineDecorators = (params: AgGridArgsOptions) => {
   const argDecorators: ParameterDecorator[] = [];
   if (params.extraArgs) {
     for (const argName of Object.keys(params.extraArgs)) {
@@ -585,7 +585,7 @@ export const AgGridCombineDecorators = (params: IAgGridArgsOptions) => {
   };
 };
 
-export const AgGridArgs = (params: IAgGridArgsOptions) => {
+export const AgGridArgs = (params: AgGridArgsOptions) => {
   const gqlOptions = params.gql ?? {};
   if (!gqlOptions.type) {
     gqlOptions.type = returnValue(
@@ -601,7 +601,7 @@ export const AgGridArgs = (params: IAgGridArgsOptions) => {
 /**
  * Combine multiple param decorators
  */
-export const AgGridArgsNoPagination = (params: IAgGridArgsOptions) => {
+export const AgGridArgsNoPagination = (params: AgGridArgsOptions) => {
   const gqlOptions = params.gql ?? {};
   if (!gqlOptions.type) {
     gqlOptions.type = returnValue(
@@ -615,8 +615,8 @@ export const AgGridArgsNoPagination = (params: IAgGridArgsOptions) => {
 };
 
 export function AgGridArgsSingleDecoratorMapper<T>(
-  params: IAgGridArgsOptions | undefined,
-  args: IAgQueryParams,
+  params: AgGridArgsOptions | undefined,
+  args: AgQueryParams,
   info: GraphQLResolveInfo,
 ): AgGridFindManyOptions<T> {
   const findManyOptions: AgGridFindManyOptions = {};
@@ -648,7 +648,7 @@ export function AgGridArgsSingleDecoratorMapper<T>(
 }
 
 export const AgGridArgsSingleDecoratorFactory = <T>(
-  data: IAgGridArgsOptions | undefined,
+  data: AgGridArgsOptions | undefined,
   ctx: ExecutionContext,
 ): AgGridFindManyOptions<T> => {
   const gqlCtx = GqlExecutionContext.create(ctx);
@@ -664,7 +664,7 @@ export const AgGridArgsSingleDecorator = createParamDecorator(
   AgGridArgsSingleDecoratorFactory,
 );
 
-export const AgGridArgsSingle = (params: IAgGridArgsSingleOptions) => {
+export const AgGridArgsSingle = (params: AgGridArgsSingleOptions) => {
   let joinArg: ParameterDecorator;
   if (params.entityType) {
     const JoinOptionInput = agJoinArgFactory(params.entityType);

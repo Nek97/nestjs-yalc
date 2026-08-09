@@ -25,15 +25,15 @@ import { ObjectLiteral } from 'typeorm';
 import { AgGridInterceptor } from '@nestjs-yalc/ag-grid/ag-grid.interceptor';
 import returnValue from '@nestjs-yalc/utils/returnValue';
 import {
-  IExtraArg,
+  ExtraArg,
   AgGridFindManyOptions,
-  IIDArg,
+  DArg,
 } from '@nestjs-yalc/ag-grid/ag-grid.interface';
 import {
   GenericService,
   getServiceToken,
 } from '@nestjs-yalc/ag-grid/generic-service.service';
-import { IDecoratorType, IFieldMapper } from '@nestjs-yalc/interfaces';
+import { DecoratorType, FieldMapper } from '@nestjs-yalc/interfaces';
 import AgGridGqlType from './ag-grid.type';
 import {
   getDataloaderToken,
@@ -45,44 +45,44 @@ import { ClassType } from '@nestjs-yalc/types';
 import {
   filterTypeToNativeType,
   getEntityRelations,
-  IRelationInfo,
+  RelationInfo,
 } from './ag-grid.helpers';
 import { getAgGridFieldMetadataList } from './object.decorator';
 import { AgGridError } from './ag-grid.error';
 import { ExtraArgsStrategy } from './ag-grid.enum';
-import { IAgQueryParams } from './ag-grid.args';
+import { AgQueryParams } from './ag-grid.args';
 import { InputArgs } from '@nestjs-yalc/ag-grid/gqlmapper.decorator';
 import { isClass } from '@nestjs-yalc/utils/class.helper';
 import { GetContext } from '@nestjs-yalc/utils/nest.decorator';
-export interface IGenericResolver {
+export interface GenericResolver {
   [index: string]: any; //index signature
 }
 
-export interface IGenericResolverMethodOptions {
+export interface GenericResolverMethodOptions {
   disabled?: boolean;
   queryParams?: QueryOptions | MutationOptions;
   returnType?: ReturnTypeFunc;
   /**
    * @deprecated please use the property decorator alternative instead
    */
-  fieldMap?: IFieldMapper;
-  decorators?: IDecoratorType[];
-  defaultValue?: IAgQueryParams | any;
+  fieldMap?: FieldMapper;
+  decorators?: DecoratorType[];
+  defaultValue?: AgQueryParams | any;
   /**
    * Filters with direct arguments
    */
   extraArgsStrategy?: ExtraArgsStrategy;
   extraArgs?: {
-    [index: string]: IExtraArg;
+    [index: string]: ExtraArg;
   };
 }
-export interface IExtraInput<Type> {
+export interface ExtraInput<Type> {
   middleware?: {
     (ctx: GqlExecutionContext, input: Type, filterValue?: any): any;
   };
   gqlOptions?: ArgsOptions;
 }
-export interface IExtraInputStrict<Type> {
+export interface ExtraInputStrict<Type> {
   middleware: {
     (ctx: GqlExecutionContext, input: Type, filterValue?: any): any;
   };
@@ -92,29 +92,29 @@ export interface IExtraInputStrict<Type> {
  * @property idName - if `not undefined` will be used as a key,
  * and the guid as value in the input object
  */
-export interface IGenericResolverMutationCreateOptions<Type>
-  extends IGenericResolverMethodOptions {
-  extraInputs?: { [key: string]: IExtraInput<Type> };
+export interface GenericResolverMutationCreateOptions<Type>
+  extends GenericResolverMethodOptions {
+  extraInputs?: { [key: string]: ExtraInput<Type> };
 }
 
 /**
  * @property idName - if `undefined` will be used ID as value,
  *  if the type is IIDArg the guid will be used as id
  */
-export interface IGenericResolverQueryOptions
-  extends IGenericResolverMethodOptions {
-  idName?: string | IIDArg;
+export interface GenericResolverQueryOptions
+  extends GenericResolverMethodOptions {
+  idName?: string | DArg;
   throwOnNotFound?: boolean;
 }
 
-export function isIDArg(arg: string | IIDArg): arg is IIDArg {
-  return !!(<IIDArg>arg).name;
+export function isIDArg(arg: string | DArg): arg is DArg {
+  return !!(<DArg>arg).name;
 }
 
 export function isExtraInputStrict<Entity>(
-  input: undefined | IExtraInput<Entity>,
-): input is IExtraInputStrict<Entity> {
-  const casted = input as IExtraInputStrict<Entity>;
+  input: undefined | ExtraInput<Entity>,
+): input is ExtraInputStrict<Entity> {
+  const casted = input as ExtraInputStrict<Entity>;
   return !!casted.middleware;
 }
 
@@ -133,21 +133,21 @@ export function checkFinalId(finalId: string | undefined) {
 //   };
 // }
 
-export interface ICustomSingleQueryOptions
-  extends IGenericResolverMethodOptions {
+export interface CustomSingleQueryOptions
+  extends GenericResolverMethodOptions {
   isSingleResource: true;
   throwOnNotFound?: boolean;
   idName?: string;
 }
 
 export function isCustomSingleQueryOptions(
-  option: IGenericResolverQueryOptions | ICustomSingleQueryOptions,
-): option is ICustomSingleQueryOptions {
-  return (<ICustomSingleQueryOptions>option).isSingleResource === true;
+  option: GenericResolverQueryOptions | CustomSingleQueryOptions,
+): option is CustomSingleQueryOptions {
+  return (<CustomSingleQueryOptions>option).isSingleResource === true;
 }
 
-export function hasExtraArgs(option: IGenericResolverQueryOptions): boolean {
-  return !!(<IGenericResolverQueryOptions>option).extraArgs;
+export function hasExtraArgs(option: GenericResolverQueryOptions): boolean {
+  return !!(<GenericResolverQueryOptions>option).extraArgs;
 }
 
 export function hasFilters(findOptions: AgGridFindManyOptions) {
@@ -158,7 +158,7 @@ export function hasFilters(findOptions: AgGridFindManyOptions) {
   );
 }
 
-export interface IGenericResolverOptions<Entity> {
+export interface GenericResolverOptions<Entity> {
   entityModel: ClassType<Entity>;
   dto?: ClassType;
   input?: {
@@ -168,16 +168,16 @@ export interface IGenericResolverOptions<Entity> {
   };
   prefix?: string;
   queries?: {
-    getResource?: IGenericResolverQueryOptions;
-    getResourceGrid?: IGenericResolverMethodOptions;
+    getResource?: GenericResolverQueryOptions;
+    getResourceGrid?: GenericResolverMethodOptions;
   };
   customQueries?: {
-    [index: string]: IGenericResolverQueryOptions | ICustomSingleQueryOptions;
+    [index: string]: GenericResolverQueryOptions | CustomSingleQueryOptions;
   };
   mutations?: {
-    createResource: IGenericResolverMutationCreateOptions<Entity>;
-    deleteResource: IGenericResolverMethodOptions;
-    updateResource: IGenericResolverMethodOptions;
+    createResource: GenericResolverMutationCreateOptions<Entity>;
+    deleteResource: GenericResolverMethodOptions;
+    updateResource: GenericResolverMethodOptions;
   };
   /** exclude create/delete/update mutations automatically */
   readonly?: boolean;
@@ -200,7 +200,7 @@ export function generateDecorators(
   methodFn: typeof Query | typeof Mutation,
   defaultName: string,
   typeFunc: ReturnTypeFunc,
-  options?: IGenericResolverMethodOptions,
+  options?: GenericResolverMethodOptions,
 ) {
   if (options?.disabled) return [];
 
@@ -213,8 +213,8 @@ export function generateDecorators(
   ];
 }
 export function defineFieldResolver<Entity extends Record<string, any> = any>(
-  resolverInfoList: IRelationInfo[],
-  resolver: ClassType<IGenericResolver>,
+  resolverInfoList: RelationInfo[],
+  resolver: ClassType<GenericResolver>,
 ) {
   for (const resolverInfo of resolverInfoList) {
     let relType =
@@ -395,8 +395,8 @@ export function defineFieldResolver<Entity extends Record<string, any> = any>(
 export function defineGetSingleResource<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
-  resolver: ClassType<IGenericResolver>,
-  methodOptions: IGenericResolverQueryOptions,
+  resolver: ClassType<GenericResolver>,
+  methodOptions: GenericResolverQueryOptions,
 ) {
   Object.defineProperty(resolver.prototype, queryName, {
     configurable: true,
@@ -485,8 +485,8 @@ export function defineGetSingleResource<Entity extends Record<string, any>>(
 export function defineGetGridResource<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
-  resolver: ClassType<IGenericResolver>,
-  methodOptions: IGenericResolverQueryOptions,
+  resolver: ClassType<GenericResolver>,
+  methodOptions: GenericResolverQueryOptions,
 ) {
   Object.defineProperty(resolver.prototype, queryName, {
     configurable: true,
@@ -561,9 +561,9 @@ export function defineGetGridResource<Entity extends Record<string, any>>(
 export function defineCreateMutation<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
-  resolver: ClassType<IGenericResolver>,
-  options: IGenericResolverOptions<Entity>,
-  methodOptions: IGenericResolverMutationCreateOptions<Entity>,
+  resolver: ClassType<GenericResolver>,
+  options: GenericResolverOptions<Entity>,
+  methodOptions: GenericResolverMutationCreateOptions<Entity>,
 ) {
   const extraInputs = methodOptions.extraInputs;
 
@@ -574,7 +574,7 @@ export function defineCreateMutation<Entity extends Record<string, any>>(
       input: Entity,
       findOptions: AgGridFindManyOptions<Entity>,
       ctx: ExecutionContext,
-      extraInputsArgs?: { [key: string]: IExtraInput<Entity> },
+      extraInputsArgs?: { [key: string]: ExtraInput<Entity> },
     ): Promise<Entity | null> {
       const gqlCtx = GqlExecutionContext.create(ctx);
 
@@ -663,9 +663,9 @@ export function defineCreateMutation<Entity extends Record<string, any>>(
 export function defineUpdateMutation<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
-  resolver: ClassType<IGenericResolver>,
-  options: IGenericResolverOptions<Entity>,
-  methodOptions: IGenericResolverQueryOptions,
+  resolver: ClassType<GenericResolver>,
+  options: GenericResolverOptions<Entity>,
+  methodOptions: GenericResolverQueryOptions,
 ) {
   Object.defineProperty(resolver.prototype, queryName, {
     configurable: true,
@@ -738,9 +738,9 @@ export function defineUpdateMutation<Entity extends Record<string, any>>(
 export function defineDeleteMutation<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
-  resolver: ClassType<IGenericResolver>,
-  options: IGenericResolverOptions<Entity>,
-  methodOptions: IGenericResolverQueryOptions,
+  resolver: ClassType<GenericResolver>,
+  options: GenericResolverOptions<Entity>,
+  methodOptions: GenericResolverQueryOptions,
 ) {
   Object.defineProperty(resolver.prototype, queryName, {
     configurable: true,
@@ -789,13 +789,13 @@ export function resolverFactory<
   Entity extends Record<string, any> = any,
   EntityWrite extends ObjectLiteral = Entity,
 >(
-  options: IGenericResolverOptions<Entity>,
+  options: GenericResolverOptions<Entity>,
 ): {
   new (
     service: GenericService<Entity, EntityWrite>,
     dataloader: GQLDataLoader<Entity>,
     moduleRef: ModuleRef,
-  ): IGenericResolver;
+  ): GenericResolver;
 } {
   const returnType = options.dto ?? options.entityModel;
 
@@ -827,7 +827,7 @@ export function resolverFactory<
    * Retrieve information about relations
    *
    */
-  const resolverInfoList: IRelationInfo[] = getEntityRelations(
+  const resolverInfoList: RelationInfo[] = getEntityRelations(
     options.entityModel,
     options.dto,
   );
@@ -876,7 +876,7 @@ export function resolverFactory<
       } else {
         const target = field.relation.targetKey.alias;
 
-        const dataLoaderRelation: IRelationInfo = {
+        const dataLoaderRelation: RelationInfo = {
           join: {
             propertyName,
             name: field.relation.sourceKey.alias,
@@ -947,7 +947,7 @@ export function resolverFactory<
   @Resolver(returnValue(returnType))
   class GenericResolver
     extends (options.readonly ? BaseClass : Mutations)
-    implements IGenericResolver {}
+    implements GenericResolver {}
 
   defineGetSingleResource(
     `${options.prefix ?? ''}get${options.entityModel.name}`,

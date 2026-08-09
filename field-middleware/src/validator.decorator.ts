@@ -1,10 +1,10 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
 import { StringFormatEnum } from './string-format.enum';
 import { validateDate, validateStringFormat } from './validator.helper';
-import { IStringFormatMatchCheckOptions } from './validator.interface';
+import { StringFormatMatchCheckOptions } from './validator.interface';
 
 export const stringFormatMatchValidatorFactory = (
-  stringMatchOptions: IStringFormatMatchCheckOptions,
+  stringMatchOptions: StringFormatMatchCheckOptions,
 ) => {
   return {
     validate(string: string) {
@@ -25,7 +25,7 @@ export const dateValidatorFactory = () => {
 //Decoratos
 export function StringFormatMatchValidation(
   validationOptions?: ValidationOptions,
-  stringMatchOptions: IStringFormatMatchCheckOptions = {
+  stringMatchOptions: StringFormatMatchCheckOptions = {
     toMatch: true,
     pattern: StringFormatEnum.ALL,
   },

@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext, Type } from '@nestjs/common';
 import { GqlExecutionContext, ReturnTypeFuncValue } from '@nestjs/graphql';
 import {
-  IFieldMapper,
+  FieldMapper,
   FieldMapperProperty,
 } from '@nestjs-yalc/interfaces/maps.interface';
 import {
@@ -13,24 +13,24 @@ import { ClassType } from '@nestjs-yalc/types/globals';
 import { GraphQLResolveInfo } from 'graphql';
 import { removeSymbolicSelection } from './ag-grid-args.decorator';
 import {
-  IAgGridFieldMetadata,
-  IFieldAndFilterMapper,
+  AgGridFieldMetadata,
+  FieldAndFilterMapper,
 } from './object.decorator';
 
-export interface IGqlAgSingleParams {
+export interface GqlAgSingleParams {
   id: Type<any>;
 }
 
-export interface IKeyMeta {
-  fieldMapper: FieldMapperProperty | IAgGridFieldMetadata;
+export interface KeyMeta {
+  fieldMapper: FieldMapperProperty | AgGridFieldMetadata;
   isNested?: boolean;
   rawSelect: string;
 }
 
 export const GqlAgGridFieldsMapper = (
-  data: IFieldMapper | ReturnTypeFuncValue | ClassType,
+  data: FieldMapper | ReturnTypeFuncValue | ClassType,
   info: GraphQLResolveInfo,
-): { keys: string[]; keysMeta: { [key: string]: IKeyMeta } } => {
+): { keys: string[]; keysMeta: { [key: string]: KeyMeta } } => {
   const fieldMapper = objectToFieldMapper(data);
 
   /**
@@ -41,10 +41,10 @@ export const GqlAgGridFieldsMapper = (
   /**
    * Custom or Derived keys
    */
-  const keysMeta: { [key: string]: IKeyMeta } = {};
+  const keysMeta: { [key: string]: KeyMeta } = {};
 
   const processSubItems = (
-    mapper: IFieldAndFilterMapper,
+    mapper: FieldAndFilterMapper,
     item: any,
     prefix = '',
     path = '',
@@ -186,7 +186,7 @@ export const GqlAgGridFieldsMapper = (
 };
 
 export const GqlInfoGenerator = (
-  data: IFieldMapper | ReturnTypeFuncValue | ClassType = {},
+  data: FieldMapper | ReturnTypeFuncValue | ClassType = {},
   ctx: ExecutionContext,
 ): string[] => {
   const gqlCtx = GqlExecutionContext.create(ctx);

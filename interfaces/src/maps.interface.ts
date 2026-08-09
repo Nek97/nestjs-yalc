@@ -1,9 +1,9 @@
-export type IFieldMapper<T = any> = {
+export type FieldMapper<T = any> = {
   [k in keyof T]: FieldMapperProperty;
 };
 
-export const isFieldMapper = (object: any): object is IFieldMapper => {
-  const casted = object as IFieldMapper;
+export const isFieldMapper = (object: any): object is FieldMapper => {
+  const casted = object as FieldMapper;
   const values = Object.values(casted);
   return values.length > 0 && values.every((p) => !!p.dst);
 };

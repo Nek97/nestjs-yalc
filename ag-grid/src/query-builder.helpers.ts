@@ -2,7 +2,7 @@ import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import { formatRawSelection, getDestinationFieldName } from './ag-grid.helpers';
 import {
   getAgGridFieldMetadataList,
-  IAgGridFieldMetadata,
+  AgGridFieldMetadata,
 } from './object.decorator';
 
 /**
@@ -24,7 +24,7 @@ SelectQueryBuilder.prototype.getMany = async function () {
     const item = raw[index];
 
     for (const [propertyKey, field] of Object.entries<
-      IAgGridFieldMetadata<any>
+      AgGridFieldMetadata<any>
     >(metaInfo)) {
       if (field.mode === 'derived' && field.dst) {
         const itemKey = formatRawSelection(
@@ -50,7 +50,7 @@ SelectQueryBuilder.prototype.getOne = async function () {
 
   const metaInfo = getAgGridFieldMetadataList(entities[0].constructor) ?? {};
 
-  for (const [propertyKey, field] of Object.entries<IAgGridFieldMetadata<any>>(
+  for (const [propertyKey, field] of Object.entries<AgGridFieldMetadata<any>>(
     metaInfo,
   )) {
     if (field.mode === 'derived' && field.dst) {
