@@ -6,7 +6,6 @@ import defaultConf, {
   globals,
   coverageThreshold,
 } from './jest-def.config';
-import { options as jestOptionObject } from 'jest-cli/build/cli/args';
 import yargs from 'yargs';
 
 interface IAppDep {
@@ -93,7 +92,6 @@ export function jestConfGenerator(
       });
     })
     .showHelpOnFail(false)
-    .options(jestOptionObject)
     .fail(() => {
       // nothing to do
     }).argv as any;
