@@ -140,7 +140,7 @@ function _makeSingleDbConfigParams(
   } = process.env;
 
   const host =
-    global.__JEST_DISABLE_DB !== true ? MYSQL_HOST : 'jest-db-disabled';
+    (global as any).__JEST_DISABLE_DB !== true ? MYSQL_HOST : 'jest-db-disabled';
   const port = _getDbPort(MYSQL_PORT);
   const username = MYSQL_USER || 'root';
   const password = MYSQL_PASSWORD ?? MYSQL_ROOT_PASSWORD;

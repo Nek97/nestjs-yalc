@@ -6,11 +6,11 @@ import { Spread } from '@nestjs-yalc/types';
  * @param value
  * @returns `boolean`
  */
-export const belongsToEnum = <T>(
+export const belongsToEnum = <T extends Record<string, any>>(
   enumObj: T,
   value: string | number,
 ): boolean => {
-  return Object.values(enumObj).includes(value);
+  return (Object.values(enumObj) as any[]).includes(value);
 };
 
 type Merge<T extends readonly any[]> = T extends readonly [infer H, ...infer R]

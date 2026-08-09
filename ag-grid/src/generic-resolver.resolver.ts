@@ -21,6 +21,7 @@ import {
   Inject,
   UseInterceptors,
 } from '@nestjs/common';
+import { ObjectLiteral } from 'typeorm';
 import { AgGridInterceptor } from '@nestjs-yalc/ag-grid/ag-grid.interceptor';
 import returnValue from '@nestjs-yalc/utils/returnValue';
 import {
@@ -218,7 +219,7 @@ export function defineFieldResolver<Entity extends Record<string, any> = any>(
   for (const resolverInfo of resolverInfoList) {
     let relType =
       (typeof resolverInfo.relation.type === 'function'
-        ? resolverInfo.relation.type()
+        ? (resolverInfo.relation.type as Function)()
         : resolverInfo.relation.type) ?? resolverInfo.agField?.gqlType?.();
 
     if (Array.isArray(relType)) {
@@ -391,7 +392,7 @@ export function defineFieldResolver<Entity extends Record<string, any> = any>(
   }
 }
 
-export function defineGetSingleResource<Entity>(
+export function defineGetSingleResource<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
   resolver: ClassType<IGenericResolver>,
@@ -481,7 +482,7 @@ export function defineGetSingleResource<Entity>(
   );
 }
 
-export function defineGetGridResource<Entity>(
+export function defineGetGridResource<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
   resolver: ClassType<IGenericResolver>,
@@ -557,7 +558,7 @@ export function defineGetGridResource<Entity>(
   );
 }
 
-export function defineCreateMutation<Entity>(
+export function defineCreateMutation<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
   resolver: ClassType<IGenericResolver>,
@@ -659,7 +660,7 @@ export function defineCreateMutation<Entity>(
   );
 }
 
-export function defineUpdateMutation<Entity>(
+export function defineUpdateMutation<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
   resolver: ClassType<IGenericResolver>,
@@ -734,7 +735,7 @@ export function defineUpdateMutation<Entity>(
   );
 }
 
-export function defineDeleteMutation<Entity>(
+export function defineDeleteMutation<Entity extends Record<string, any>>(
   queryName: string,
   returnType: ClassType,
   resolver: ClassType<IGenericResolver>,
@@ -786,7 +787,7 @@ export function defineDeleteMutation<Entity>(
 
 export function resolverFactory<
   Entity extends Record<string, any> = any,
-  EntityWrite = Entity,
+  EntityWrite extends ObjectLiteral = Entity,
 >(
   options: IGenericResolverOptions<Entity>,
 ): {

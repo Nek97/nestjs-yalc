@@ -1,4 +1,4 @@
-import { SelectQueryBuilder } from 'typeorm';
+import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 import { formatRawSelection, getDestinationFieldName } from './ag-grid.helpers';
 import {
   getAgGridFieldMetadataList,
@@ -10,7 +10,7 @@ import {
  */
 
 declare module 'typeorm' {
-  interface SelectQueryBuilder<Entity> {
+  interface SelectQueryBuilder<Entity extends ObjectLiteral> {
     getMany(this: SelectQueryBuilder<Entity>): Promise<Entity[]>;
     getOne(this: SelectQueryBuilder<Entity>): Promise<Entity | undefined>;
   }
@@ -67,4 +67,4 @@ SelectQueryBuilder.prototype.getOne = async function () {
   return entities[0];
 };
 
-export class SelectQueryBuilderPatched<T> extends SelectQueryBuilder<T> {}
+export class SelectQueryBuilderPatched<T extends ObjectLiteral> extends SelectQueryBuilder<T> {}

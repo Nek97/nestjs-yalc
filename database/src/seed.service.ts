@@ -138,7 +138,7 @@ export class SeedService {
    *
    */
   private resetConnection() {
-    global['TypeORM_Seeding_Connection'] = {
+    (global as any)['TypeORM_Seeding_Connection'] = {
       configureOption: {
         root: process.cwd(),
         configName: '',
@@ -151,7 +151,7 @@ export class SeedService {
   }
 
   private setConnection(connection: Connection | undefined) {
-    global['TypeORM_Seeding_Connection']['connection'] = connection;
+    (global as any)['TypeORM_Seeding_Connection']['connection'] = connection;
   }
 }
 

@@ -7,7 +7,7 @@ import { ClassType } from '@nestjs-yalc/types';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
 import {
   EntityRepository,
-  FindOptionsUtils,
+  ObjectLiteral,
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
@@ -23,7 +23,7 @@ import './query-builder.helpers'; // must be imported here
 
 export const AG_GRID_MAIN_ALIAS = 'AgGridMainAlias';
 
-export class AgGridRepository<Entity> extends Repository<Entity> {
+export class AgGridRepository<Entity extends ObjectLiteral> extends Repository<Entity> {
   protected entity: EntityClassOrSchema;
 
   /**
@@ -147,11 +147,7 @@ export class AgGridRepository<Entity> extends Repository<Entity> {
       processRelationExtraConditions('left', joinCopy.leftJoinAndSelect);
     }
 
-    queryBuilder =
-      FindOptionsUtils.applyFindManyOptionsOrConditionsToQueryBuilder<Entity>(
-        queryBuilder,
-        { ...strippedFindOptions, join: joinCopy },
-      );
+    queryBuilder.setFindOptions({ ...strippedFindOptions, join: joinCopy } as any);
 
     rawSelection.length > 0 && queryBuilder.addSelect(rawSelection);
 
@@ -353,7 +349,7 @@ export class AgGridRepository<Entity> extends Repository<Entity> {
 
 const repositoryMap = new WeakMap();
 
-export function AgGridRepositoryFactory<Entity>(
+export function AgGridRepositoryFactory<Entity extends ObjectLiteral>(
   entity: ClassType<Entity>,
 ): ClassType<AgGridRepository<Entity>> {
   let cached;

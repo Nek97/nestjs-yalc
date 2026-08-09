@@ -6,17 +6,17 @@ import { Kind, ValueNode } from 'graphql';
 export class UUIDScalar implements CustomScalar<string, string> {
   description = 'UUID Scalar Type';
 
-  parseValue(value: string): string {
+  parseValue(value: any): string {
     if (!validateUUID(value))
       throw new UUIDValidationError(formatValueErrorMessage(value));
     return value;
   }
 
-  serialize(value: string): string {
+  serialize(value: any): string {
     return value;
   }
 
-  parseLiteral(ast: ValueNode): string | null {
+  parseLiteral(ast: ValueNode): string {
     if (ast.kind === Kind.STRING) {
       const id = ast.value;
       return this.parseValue(id);

@@ -186,7 +186,7 @@ export interface IAgGridFindExtraOptions {
   _aliasType?: string;
 }
 
-export interface AgGridFindManyOptions<T = any> extends FindManyOptions<T> {
+export interface AgGridFindManyOptions<T = any> extends Omit<FindManyOptions<T>, 'where'> {
   where?: IWhereCondition;
   /** Contains useful information about the graphql request */
   info?: GraphQLResolveInfo;

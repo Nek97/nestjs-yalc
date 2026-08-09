@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as faker from 'faker';
 
 // TODO: Probably we can use the internal faker of typeorm-seeding to create uniqueness, like we do here
@@ -29,7 +30,7 @@ export class FakerHelper {
     });
   }
 
-  randomFromEnum<T>(inputEnum: T): T[keyof T] {
+  randomFromEnum<T extends Record<string, any>>(inputEnum: T): T[keyof T] {
     const randInt = faker.datatype.number(Object.keys(inputEnum).length - 1);
     return inputEnum[Object.keys(inputEnum)[randInt] as keyof typeof inputEnum];
   }
@@ -45,7 +46,9 @@ export class FakerHelper {
   randomBirthDate = () => {
     const birthDate = faker.date.past(82);
     birthDate.setFullYear(birthDate.getFullYear() - 18);
-    const [mm, dd, yyyy] = birthDate.toLocaleString().split(',')[0].split('/');
+    const mm = (birthDate.getMonth() + 1).toString().padStart(2, '0');
+    const dd = birthDate.getDate().toString().padStart(2, '0');
+    const yyyy = birthDate.getFullYear();
     return `${yyyy}-${mm}-${dd}`;
   };
 

@@ -12,7 +12,7 @@ export function convertIfStringToDate(date: Date | string): Date {
   return date;
 }
 
-export function stringIsInEnumOrThrow<T>(
+export function stringIsInEnumOrThrow<T extends Record<string, any>>(
   toCheck: string,
   enumName: T,
   message?: string,
@@ -23,8 +23,8 @@ export function stringIsInEnumOrThrow<T>(
   errorTrhow(toCheck, message);
 }
 
-export function stringIsInEnum<T>(toCheck: string, enumName: T): boolean {
-  for (const enumProperty of Object.values(enumName)) {
+export function stringIsInEnum<T extends Record<string, any>>(toCheck: string, enumName: T): boolean {
+  for (const enumProperty of Object.values(enumName) as string[]) {
     if (enumProperty.toLowerCase() === toCheck.toLowerCase()) {
       return true;
     }

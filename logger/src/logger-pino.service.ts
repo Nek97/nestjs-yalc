@@ -1,4 +1,5 @@
 import { LogLevel } from '@nestjs/common';
+// @ts-ignore
 import { default as pino, stdTimeFunctions } from 'pino';
 import { LoggerAbstractService } from './logger-abstract.service';
 
@@ -14,7 +15,7 @@ export const logger = pino(
     // name: process.env.AWS_LAMBDA_FUNCTION_NAME,
     // level: process.env.LOG_LEVEL || 'info',
     formatters: {
-      level: (label) => {
+      level: (label: string) => {
         return { level: label };
       },
     },
@@ -46,7 +47,7 @@ export class PinoLogger extends LoggerAbstractService {
 
     // use pino.final to create a special logger that
     // guarantees final tick writes
-    const handler = pino.final(logger, (err, finalLogger, evt) => {
+    const handler = pino.final(logger, (err: Error | null, finalLogger: pino.Logger, evt: string) => {
       finalLogger.info(`${evt} caught`);
       if (err) finalLogger.error(err, 'error caused exit');
       process.exit(err ? 1 : 0);

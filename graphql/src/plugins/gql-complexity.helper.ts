@@ -4,6 +4,7 @@ import {
   isExecutableDefinitionNode,
   SelectionNode,
   GraphQLSchema,
+  ExecutableDefinitionNode,
 } from 'graphql';
 import { GqlASTHelper } from './gql-ast.helper';
 import { GqlError, GqlErrorMsgs } from './gql.error';
@@ -34,14 +35,14 @@ export class GqlComplexityHelper {
   static processDocumentAST(document: DocumentNode, schema?: GraphQLSchema) {
     document.definitions
       .filter(isExecutableDefinitionNode)
-      .forEach((operation) => {
+      .forEach((operation: ExecutableDefinitionNode) => {
         const { selectionSet } = operation;
 
         const { name } = selectionSet.selections[0] as FieldNode;
         const queryContext = schema?.getQueryType()?.getFields()[name.value];
 
         GqlComplexityHelper.customMaxDepth =
-          queryContext?.extensions?.complexity ?? MAX_DEPTH;
+          (queryContext?.extensions?.complexity as number) ?? MAX_DEPTH;
 
         const totalOperations = selectionSet.selections.length;
         if (totalOperations > MAX_EXECUTABLE_DEFINITIONS) {

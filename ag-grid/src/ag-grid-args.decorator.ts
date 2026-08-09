@@ -62,7 +62,7 @@ import {
   AgGridInvalidOperatorError,
 } from './ag-grid.error';
 import { DateHelper } from '@nestjs-yalc/utils/date.helper';
-import { EntityFieldsNames } from 'typeorm/common/EntityFieldsNames';
+
 import { agJoinArgFactory } from './ag-grid.input';
 import returnValue from '@nestjs-yalc/utils/returnValue';
 import { GraphQLResolveInfo } from 'graphql';
@@ -414,7 +414,7 @@ export function mapAgGridParams(
 
   // MAP sorting -> order
   const order: {
-    [P in EntityFieldsNames]?: 'ASC' | 'DESC' | 1 | -1;
+    [P: string]: 'ASC' | 'DESC' | 1 | -1;
   } = {};
 
   const sorting = args.sorting ?? defaultSorting;

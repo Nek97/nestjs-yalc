@@ -97,7 +97,7 @@ export class QueryBuilderHelper {
    * @param mode Replication mode
    * @param operationFn The operation to apply to the QueryBuilder
    */
-  public static async applyOperationToQueryBuilder<Entity>(
+  public static async applyOperationToQueryBuilder<Entity extends ObjectLiteral>(
     queryBuilder: SelectQueryBuilder<Entity>,
     mode: ReplicationMode,
     operationFn: (
@@ -125,7 +125,7 @@ export class QueryBuilderHelper {
    * We took this function from https://github.com/typeorm/typeorm/blob/master/src/query-builder/QueryBuilder.ts
    * Since it is protected we can not use the function directly.
    */
-  public static computeFindOperatorExpression<Entity>(
+  public static computeFindOperatorExpression<Entity extends ObjectLiteral>(
     queryBuilder: QueryBuilder<Entity> | undefined,
     operator: FindOperator<any>,
     aliasPath: string,

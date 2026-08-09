@@ -68,15 +68,15 @@ class _DataLoaderWithCount<
         ? findOptions.select
         : [];
 
-      if (selections.indexOf(searchKey) === -1) {
-        selections.push(searchKey);
-        findOptions.select = selections;
+      if ((selections as any[]).indexOf(searchKey) === -1) {
+        (selections as any[]).push(searchKey);
+        findOptions.select = selections as any;
       }
 
       // this is needed for joined and nested queries
       for (const field in findOptions.order) {
-        if (selections.indexOf(field) === -1) {
-          selections.push(field);
+        if ((selections as any[]).indexOf(field) === -1) {
+          (selections as any[]).push(field);
         }
       }
 
@@ -167,11 +167,11 @@ export class GQLDataLoader<Entity extends Record<string, any> = any> {
 
     if (!DLKey) {
       // concat different information to create a proper dataloader key
-      DLKey = `${findOptions.select?.sort?.().join(',')}|${JSON.stringify(
+      DLKey = `${JSON.stringify(findOptions.select)}|${JSON.stringify(
         findOptions.where ?? { filters: {} },
       )}|${JSON.stringify(findOptions.subQueryFilters)}|${JSON.stringify(
         findOptions.order ?? {},
-      )}|${searchKey}`;
+      )}|${String(searchKey)}`;
 
       this.keyMap.set(findOptions, DLKey);
     }
@@ -258,12 +258,12 @@ export class GQLDataLoader<Entity extends Record<string, any> = any> {
 }
 
 export const getFn =
-  <Entity>(service: GenericService<Entity>) =>
+  <Entity extends Record<string, any>>(service: GenericService<Entity>) =>
   async (findManyOptions: AgGridFindManyOptions) => {
     return service.getEntityListAgGrid(findManyOptions, true);
   };
 
-export function DataLoaderFactory<Entity>(
+export function DataLoaderFactory<Entity extends Record<string, any>>(
   defaultSearchKey: keyof Entity,
   entity: ClassType,
   serviceToken?: string,

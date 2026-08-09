@@ -249,7 +249,13 @@ export function agJoinArgFactory<Entity>(
   resolverInfoList.forEach((r) => {
     const type = r.relation.type;
     if (typeof type !== 'string') {
-      const typeClass = type();
+      let typeClass: any;
+      try {
+        typeClass = typeof type === 'function' ? (type as any)() : type;
+      } catch {
+        /* istanbul ignore next */
+        typeClass = type;
+      }
       @InputType(`${entityModel.name}${r.relation.propertyName}JoinInputType`)
       class JoinFullInput extends IntersectionType(
         JoinInput,

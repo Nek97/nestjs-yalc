@@ -18,7 +18,7 @@ import {
   ObjectLiteral,
   QueryFailedError,
 } from 'typeorm';
-import { FindConditions } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 import { FindManyOptions } from 'typeorm';
 import { AgGridRepository } from '@nestjs-yalc/ag-grid/ag-grid.repository';
 import { AgGridFindManyOptions } from '@nestjs-yalc/ag-grid/ag-grid.interface';
@@ -37,7 +37,7 @@ import { getAgGridFieldMetadataList, isDstExtended } from './object.decorator';
  * @param entity TypeORM Entity
  * @param connectionName The Database connection name
  */
-export function GenericServiceFactory<Entity>(
+export function GenericServiceFactory<Entity extends ObjectLiteral>(
   entity: EntityClassOrSchema,
   connectionName: string,
   providedClass?: ClassType<GenericService<Entity>>,
@@ -92,7 +92,7 @@ export function validateSupportedError(
  * @todo must be refactorized with better types
  */
 @Injectable()
-export class GenericService<EntityRead, EntityWrite = EntityRead> {
+export class GenericService<EntityRead extends ObjectLiteral, EntityWrite extends ObjectLiteral = EntityRead> {
   protected entityRead: EntityClassOrSchema;
   protected entityWrite: EntityClassOrSchema;
   protected repositoryWrite: AgGridRepository<EntityWrite>;
@@ -217,10 +217,10 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
    */
   async getEntityOrFail(
     where:
-      | FindConditions<EntityRead>[]
-      | FindConditions<EntityRead>
-      | ObjectLiteral
-      | string,
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>
+      | ObjectLiteral,
     fields?: (keyof EntityRead)[],
     relations?: string[],
     databaseName?: string,
@@ -239,10 +239,10 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
    */
   async getEntity(
     where:
-      | FindConditions<EntityRead>[]
-      | FindConditions<EntityRead>
-      | ObjectLiteral
-      | string,
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>
+      | ObjectLiteral,
     fields?: (keyof EntityRead)[],
     relations?: string[],
     databaseName?: string,
@@ -252,10 +252,10 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
   ): Promise<EntityRead | undefined>;
   async getEntity(
     where:
-      | FindConditions<EntityRead>[]
-      | FindConditions<EntityRead>
-      | ObjectLiteral
-      | string,
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>
+      | ObjectLiteral,
     fields?: (keyof EntityRead)[],
     relations?: string[],
     databaseName?: string,
@@ -265,10 +265,10 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
   ): Promise<EntityRead>;
   async getEntity(
     where:
-      | FindConditions<EntityRead>[]
-      | FindConditions<EntityRead>
-      | ObjectLiteral
-      | string,
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>[]
+      | FindOptionsWhere<EntityRead>
+      | ObjectLiteral,
     fields?: (keyof EntityRead)[],
     relations?: string[],
     databaseName?: string,
@@ -280,8 +280,8 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
     if (databaseName) this.switchDatabaseConnection(databaseName);
 
     return options?.failOnNull !== true
-      ? this.repository.findOne({ where, select: fields, relations })
-      : this.repository.findOneOrFail({ where, select: fields, relations });
+      ? (await this.repository.findOne({ where: where as any, select: fields as any, relations })) || undefined
+      : this.repository.findOneOrFail({ where: where as any, select: fields as any, relations });
   }
 
   /**
@@ -345,19 +345,19 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
    * @throws ConditionsTooBroadError
    */
   async updateEntity(
-    conditions: FindConditions<EntityRead>,
+    conditions: FindOptionsWhere<EntityRead>,
     input: DeepPartial<EntityRead>,
     findOptions?: AgGridFindManyOptions<EntityRead>,
     returnEntity?: true,
   ): Promise<EntityRead>;
   async updateEntity(
-    conditions: FindConditions<EntityRead>,
+    conditions: FindOptionsWhere<EntityRead>,
     input: DeepPartial<EntityRead>,
     findOptions?: AgGridFindManyOptions<EntityRead>,
     returnEntity?: boolean,
   ): Promise<EntityRead | boolean>;
   async updateEntity(
-    conditions: FindConditions<EntityRead>,
+    conditions: FindOptionsWhere<EntityRead>,
     input: DeepPartial<EntityRead>,
     findOptions?: AgGridFindManyOptions<EntityRead>,
     returnEntity = true,
@@ -404,7 +404,7 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
    * @throws NoResultsForConditions
    * @throws ConditionsTooBroadError
    */
-  async deleteEntity(conditions: FindConditions<EntityRead>): Promise<boolean> {
+  async deleteEntity(conditions: FindOptionsWhere<EntityRead>): Promise<boolean> {
     await this.validateConditions(conditions);
 
     const mappedConditions = this.mapEntityR2W(conditions);
@@ -423,7 +423,7 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
    * @throws ConditionsTooBroadError
    */
   async validateConditions(
-    conditions: FindConditions<EntityRead>,
+    conditions: FindOptionsWhere<EntityRead>,
   ): Promise<EntityRead> {
     const results = await this.repository.find({
       where: conditions,
@@ -473,8 +473,8 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
   }
 
   protected mapEntityR2W(
-    entityRead: FindConditions<EntityRead>,
-  ): FindConditions<EntityWrite>;
+    entityRead: FindOptionsWhere<EntityRead>,
+  ): FindOptionsWhere<EntityWrite>;
   protected mapEntityR2W(
     entityRead: EntityRead | DeepPartial<EntityRead>,
   ): EntityWrite;
@@ -482,8 +482,8 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
     entityRead:
       | EntityRead
       | DeepPartial<EntityRead>
-      | FindConditions<EntityRead>,
-  ): EntityWrite | FindConditions<EntityWrite> {
+      | FindOptionsWhere<EntityRead>,
+  ): EntityWrite | FindOptionsWhere<EntityWrite> {
     const entity = this.entityWrite;
 
     if (!isClass(entity) || !isClass(this.entityRead))
@@ -497,8 +497,8 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
       const fieldMetadata = fieldMetadataList?.[propertyName];
 
       if (!fieldMetadata?.dst || !isDstExtended(fieldMetadata.dst)) {
-        newEntityWrite[propertyName] =
-          entityRead[propertyName as keyof EntityRead];
+        (newEntityWrite as any)[propertyName] =
+          (entityRead as any)[propertyName];
         continue;
       }
 
@@ -506,7 +506,7 @@ export class GenericService<EntityRead, EntityWrite = EntityRead> {
 
       dst.transformer(
         newEntityWrite,
-        entityRead[propertyName as keyof EntityRead],
+        (entityRead as any)[propertyName],
       );
     }
 

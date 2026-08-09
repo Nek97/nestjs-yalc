@@ -20,7 +20,7 @@ export class FilterScalar implements CustomScalar<string, FilterInput> {
   resultMemoize = new Map();
   resultMemoizeInverse = new WeakMap();
 
-  parseValue(value: string): FilterInput {
+  parseValue(value: any): FilterInput {
     // value from the client
     const cached = this.resultMemoize.get(value);
     if (cached) return cached;
@@ -74,13 +74,13 @@ export class FilterScalar implements CustomScalar<string, FilterInput> {
     return filter;
   }
 
-  serialize(value: FilterInput | string): string {
+  serialize(value: any): string {
     return typeof value === 'string'
       ? value
       : this.resultMemoizeInverse.get(value);
   }
 
-  parseLiteral(ast: ValueNode): FilterInput | null {
+  parseLiteral(ast: ValueNode): FilterInput {
     if (ast.kind === Kind.STRING) {
       return this.parseValue(ast.value);
     }

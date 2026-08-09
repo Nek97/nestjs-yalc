@@ -17,7 +17,7 @@ import {
 } from '@nestjs/common';
 import { ReturnTypeFuncValue } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { Equal, getMetadataArgsStorage, SelectQueryBuilder } from 'typeorm';
+import { Equal, getMetadataArgsStorage, SelectQueryBuilder, ObjectLiteral } from 'typeorm';
 import { JoinColumnMetadataArgs } from 'typeorm/metadata-args/JoinColumnMetadataArgs';
 import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
 import { createWhere, getFindOperator } from './ag-grid-args.decorator';
@@ -152,7 +152,7 @@ export const forceFilterWorker = (
   return where;
 };
 
-export function whereObjectToSqlString<Entity>(
+export function whereObjectToSqlString<Entity extends ObjectLiteral>(
   queryBuilder: SelectQueryBuilder<Entity> | undefined,
   where: IWhereCondition,
   alias?: string,
@@ -194,12 +194,12 @@ export function whereObjectToSqlString<Entity>(
       ) {
         //If instead it is a combined filter then we will convert the first and second filters, enclosing them in brackets and using the operator
         sql += `(${QueryBuilderHelper.computeFindOperatorExpression(
-          queryBuilder,
+          queryBuilder as any,
           operation.filter_1,
           QueryBuilderHelper.addAlias(key.toString(), alias, fieldMap),
           operation.filter_1.value,
         )} ${operation.operator.toUpperCase()} ${QueryBuilderHelper.computeFindOperatorExpression(
-          queryBuilder,
+          queryBuilder as any,
           operation.filter_2,
           QueryBuilderHelper.addAlias(key.toString(), alias, fieldMap),
           operation.filter_2.value,
@@ -213,7 +213,7 @@ export function whereObjectToSqlString<Entity>(
     } else if (isFindOperator(operation)) {
       //If it is a normal filter then we simply convert it and add the operator
       sql += `${QueryBuilderHelper.computeFindOperatorExpression(
-        queryBuilder,
+        queryBuilder as any,
         operation,
         QueryBuilderHelper.addAlias(key.toString(), alias, fieldMap),
         operation.value,
@@ -336,7 +336,7 @@ export function isIFieldAndFilterMapper(
   return val?.field !== undefined;
 }
 
-export interface IDependencyObject<Entity> {
+export interface IDependencyObject<Entity extends ObjectLiteral> {
   providers: Array<FactoryProvider | Provider>;
   repository: ClassType<AgGridRepository<Entity>>;
 }
@@ -353,7 +353,7 @@ export interface IResolverOverride<T = any> {
   provider: ClassType<T>;
 }
 
-interface IGenericServiceOptions<Entity> {
+interface IGenericServiceOptions<Entity extends ObjectLiteral> {
   dbConnection: string;
   entityModel?: ClassType<Entity>;
   /**
@@ -367,7 +367,7 @@ interface IDataLoaderOptions<Entity> {
   entityModel?: ClassType<Entity>;
 }
 
-export interface IAgGridDependencyFactoryOptions<Entity> {
+export interface IAgGridDependencyFactoryOptions<Entity extends ObjectLiteral> {
   entityModel: ClassType<Entity>;
   resolver?:
     | Omit<IGenericResolverOptions<Entity>, 'entityModel'>
@@ -385,7 +385,7 @@ export function isProviderOverride(
   return !!casted.provider;
 }
 
-export function AgGridDependencyFactory<Entity>({
+export function AgGridDependencyFactory<Entity extends ObjectLiteral>({
   entityModel,
   dataloader,
   resolver,
@@ -710,10 +710,10 @@ export function applySelectOnFind<T = any>(
 
     findOptions.extra._keysMeta = keysMeta;
   } else {
-    const selection = findOptions.select ?? [];
+    const selection = (findOptions.select as any[]) ?? [];
 
     selection.push(key);
 
-    findOptions.select = selection;
+    findOptions.select = selection as any;
   }
 }
