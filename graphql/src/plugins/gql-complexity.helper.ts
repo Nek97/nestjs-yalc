@@ -32,10 +32,10 @@ export class GqlComplexityHelper {
 
   static customMaxDepth: number;
 
-  static processDocumentAST(document: DocumentNode, schema?: GraphQLSchema) {
+  static processDocumentAST(document: DocumentNode, schema?: GraphQLSchema): void {
     document.definitions
       .filter(isExecutableDefinitionNode)
-      .forEach((operation: ExecutableDefinitionNode) => {
+      .forEach((operation: ExecutableDefinitionNode): void => {
         const { selectionSet } = operation;
 
         const { name } = selectionSet.selections[0] as FieldNode;
@@ -49,13 +49,13 @@ export class GqlComplexityHelper {
           throw new GqlError(GqlErrorMsgs.MAX_OPERATIONS);
         }
 
-        selectionSet.selections.forEach((selectionNode: SelectionNode) => {
+        selectionSet.selections.forEach((selectionNode: SelectionNode): void => {
           GqlComplexityHelper.hasInvalidNode(selectionNode);
         });
       });
   }
 
-  static hasInvalidNode(selectionNode: SelectionNode) {
+  static hasInvalidNode(selectionNode: SelectionNode): void {
     if (!GqlASTHelper.isFieldNode(selectionNode)) {
       return;
     }
@@ -78,7 +78,7 @@ export class GqlComplexityHelper {
     node: FieldNode,
     visitedNodes: { [key: string]: VisitedNode },
     depth: number,
-  ) {
+  ): void {
     const { name, selectionSet } = node;
     const { value: fieldName } = name;
     const notNodesField = fieldName !== 'nodes';
@@ -132,7 +132,7 @@ export class GqlComplexityHelper {
     selections: SelectionNode[],
     visitedNodes: { [key: string]: VisitedNode },
     depth: number,
-  ) {
+  ): void {
     for (const node of GqlASTHelper.filterFieldNodes(selections)) {
       GqlComplexityHelper.findInvalidNode(node, visitedNodes, depth);
     }

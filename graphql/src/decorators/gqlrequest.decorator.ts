@@ -4,7 +4,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 export const paramDecoratorToCreate = (
   _data: unknown,
   context: ExecutionContext,
-) => {
+): unknown => {
   const ctx = GqlExecutionContext.create(context);
   return ctx.getContext().req;
 };
