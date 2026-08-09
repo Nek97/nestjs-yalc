@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 
 import { ClassType, FactoryType } from '@nestjs-yalc/interfaces/common.type';
-// @ts-expect-error - Jest global setup
 import { faker } from '@faker-js/faker';
 import { getTestFilenameWithoutExtension } from './helpers';
 

@@ -13,23 +13,23 @@ export function envTestHelper(env?: EnvObj) {
   }
 
   return {
-    build(env: EnvObj) {
+    build(env: EnvObj): void {
       process.env = env;
     },
 
-    getEnv() {
+    getEnv(): NodeJS.ProcessEnv {
       return process.env;
     },
 
-    getEnvValue(key: string) {
+    getEnvValue(key: string): string | undefined {
       return process.env[key];
     },
 
-    setEnv(key: string, value: string) {
+    setEnv(key: string, value: string): void {
       process.env[key] = value;
     },
 
-    reset() {
+    reset(): void {
       process.env = OLD_ENV;
     },
   };
