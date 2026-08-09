@@ -99,12 +99,14 @@ export function filterExpressionInputFactory<Entity>(
   class FilterText implements ITextFilterModel {
     @HideField()
     filterType: FilterType.TEXT;
+    @Field(() => GeneralFilters)
     type: GeneralFilters;
     @Field(
       /* istanbul ignore next */
       () => FieldEnum,
     )
     field: string;
+    @Field()
     filter: string;
   }
 
@@ -112,13 +114,16 @@ export function filterExpressionInputFactory<Entity>(
   class FilterNumber implements INumberFilterModel {
     @HideField()
     filterType: FilterType.NUMBER;
+    @Field(() => GeneralFilters)
     type: GeneralFilters;
     @Field(
       /* istanbul ignore next */
       () => FieldEnum,
     )
     field: string;
+    @Field()
     filter: number;
+    @Field({ nullable: true })
     filterTo?: number;
   }
 
@@ -126,13 +131,16 @@ export function filterExpressionInputFactory<Entity>(
   class FilterDate implements DateFilterModel {
     @HideField()
     filterType: FilterType.DATE;
+    @Field(() => GeneralFilters)
     type: GeneralFilters;
     @Field(
       /* istanbul ignore next */
       () => FieldEnum,
     )
     field: string;
+    @Field()
     dateFrom: string;
+    @Field({ nullable: true })
     dateTo?: string;
   }
 
@@ -140,6 +148,7 @@ export function filterExpressionInputFactory<Entity>(
   class FilterSet implements ISetFilterModel {
     @HideField()
     filterType: FilterType.SET;
+    @Field(() => [String])
     values: string[];
     @Field(
       /* istanbul ignore next */
