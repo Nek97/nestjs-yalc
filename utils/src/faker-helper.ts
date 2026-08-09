@@ -1,4 +1,4 @@
-// @ts-expect-error - Faker doesn't export the Unique type directly
+
 import { faker } from '@faker-js/faker';
 
 // TODO: Probably we can use the internal faker of typeorm-seeding to create uniqueness, like we do here
@@ -39,8 +39,8 @@ export class FakerHelper {
   // however we assume when this function is called we actually want a different person.
   createPerson() {
     const gender = faker.datatype.number(1);
-    const firstName = faker.name.firstName(gender);
-    const lastName = faker.name.lastName(gender);
+    const firstName = faker.name.firstName(gender as any);
+    const lastName = faker.name.lastName(gender as any);
 
     return {
       gender,

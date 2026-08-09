@@ -1,6 +1,6 @@
 import { ClassType } from '@nestjs-yalc/types';
 
-export function isClass(func: any): func is ClassType {
+export function isClass(func: unknown): func is ClassType {
   return (
     typeof func === 'function' &&
     /^class\s/.test(Function.prototype.toString.call(func))

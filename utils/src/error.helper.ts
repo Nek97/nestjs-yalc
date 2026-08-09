@@ -3,7 +3,7 @@
  * else it throw a new error instance
  * @throws a wrapped error, avoiding a double wrap of the error
  */
-export function throwWrap(error: any): never {
+export function throwWrap(error: unknown): never {
   if (error instanceof Error) {
     throw error;
   } else {

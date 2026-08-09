@@ -1,6 +1,6 @@
 import { inflateSync, deflateSync, InputType } from 'zlib';
 
-export const inflate = (input: string) => {
+export const inflate = (input: string): string => {
   try {
     const inflated = inflateSync(Buffer.from(input, 'base64')).toString();
     return inflated;
