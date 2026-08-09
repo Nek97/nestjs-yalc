@@ -20,12 +20,12 @@ declare module 'typeorm' {
 SelectQueryBuilder.prototype.getMany = async function () {
   const { entities, raw } = await this.getRawAndEntities();
 
-  const items = entities.map((entity, index) => {
+  const items = entities.map((entity, index): unknown => {
     const metaInfo = getAgGridFieldMetadataList(entity.constructor) ?? {};
     const item = raw[index];
 
     for (const [propertyKey, field] of Object.entries<
-      AgGridFieldMetadata<any>
+      AgGridFieldMetadata<unknown>
     >(metaInfo)) {
       if (field.mode === 'derived' && field.dst) {
         const itemKey = formatRawSelection(
@@ -51,7 +51,7 @@ SelectQueryBuilder.prototype.getOne = async function () {
 
   const metaInfo = getAgGridFieldMetadataList(entities[0].constructor) ?? {};
 
-  for (const [propertyKey, field] of Object.entries<AgGridFieldMetadata<any>>(
+  for (const [propertyKey, field] of Object.entries<AgGridFieldMetadata<unknown>>(
     metaInfo,
   )) {
     if (field.mode === 'derived' && field.dst) {

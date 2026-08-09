@@ -7,7 +7,7 @@ import { ExtraArgsStrategy } from "./ag-grid.enum";
 import { AgGridFindManyOptions, DArg, ExtraArg } from "./ag-grid.interface";
 
 export interface GenericResolver {
-  [index: string]: any; //index signature
+  [index: string]: unknown; //index signature
 }
 export interface GenericResolverMethodOptions {
   disabled?: boolean;
@@ -18,7 +18,7 @@ export interface GenericResolverMethodOptions {
    */
   fieldMap?: FieldMapper;
   decorators?: DecoratorType[];
-  defaultValue?: AgQueryParams | any;
+  defaultValue?: AgQueryParams | unknown;
   /**
    * Filters with direct arguments
    */
@@ -29,13 +29,13 @@ export interface GenericResolverMethodOptions {
 }
 export interface ExtraInput<Type> {
   middleware?: {
-    (ctx: GqlExecutionContext, input: Type, filterValue?: any): any;
+    (ctx: GqlExecutionContext, input: Type, filterValue?: unknown): unknown;
   };
   gqlOptions?: ArgsOptions;
 }
 export interface ExtraInputStrict<Type> {
   middleware: {
-    (ctx: GqlExecutionContext, input: Type, filterValue?: any): any;
+    (ctx: GqlExecutionContext, input: Type, filterValue?: unknown): unknown;
   };
   gqlOptions?: ArgsOptions;
 }
@@ -100,7 +100,7 @@ export function isExtraInputStrict<Entity>(
   const casted = input as ExtraInputStrict<Entity>;
   return !!casted.middleware;
 }
-export function checkFinalId(finalId: string | undefined) {
+export function checkFinalId(finalId: string | undefined): void {
   if (typeof finalId === 'undefined') {
     throw new Error("Can't have an undefined ID");
   }
@@ -113,7 +113,7 @@ export function isCustomSingleQueryOptions(
 export function hasExtraArgs(option: GenericResolverQueryOptions): boolean {
   return !!(<GenericResolverQueryOptions>option).extraArgs;
 }
-export function hasFilters(findOptions: AgGridFindManyOptions) {
+export function hasFilters(findOptions: AgGridFindManyOptions): boolean | undefined {
   return (
     (findOptions.where &&
       Object.values(findOptions.where.filters).length > 0) ||
@@ -125,7 +125,7 @@ export function generateDecorators(
   defaultName: string,
   typeFunc: ReturnTypeFunc,
   options?: GenericResolverMethodOptions,
-) {
+): any[] {
   if (options?.disabled) return [];
 
   return [

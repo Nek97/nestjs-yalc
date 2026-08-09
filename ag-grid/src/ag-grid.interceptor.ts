@@ -9,7 +9,7 @@ import { FieldMapper } from '@nestjs-yalc/interfaces/maps.interface';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 export function agGridInterceptorWorker<T>(startRow: number, endRow: number) {
-  return ([page, count]: [T, number]) => {
+  return ([page, count]: [T, number]): { nodes: T; pageData: { count: number; startRow: number; endRow: number; }; } => {
     return {
       nodes: page,
       pageData: { count, startRow: startRow ?? 0, endRow: endRow ?? count },

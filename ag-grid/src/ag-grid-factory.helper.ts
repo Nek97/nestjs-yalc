@@ -34,7 +34,7 @@ export interface DependencyObject<Entity extends ObjectLiteral> {
   repository: ClassType<AgGridRepository<Entity>>;
 }
 
-export interface ProviderOverride<T = any> {
+export interface ProviderOverride<T = unknown> {
   provider:
     | ClassProvider<T>
     | ValueProvider<T>
@@ -42,7 +42,7 @@ export interface ProviderOverride<T = any> {
     | ExistingProvider<T>;
 }
 
-export interface ResolverOverride<T = any> {
+export interface ResolverOverride<T = unknown> {
   provider: ClassType<T>;
 }
 
@@ -72,7 +72,7 @@ export interface AgGridDependencyFactoryOptions<Entity extends ObjectLiteral> {
 }
 
 export function isProviderOverride(
-  resolver: any,
+  resolver: unknown,
 ): resolver is ProviderOverride {
   const casted = resolver as ProviderOverride;
   return !!casted.provider;
@@ -159,7 +159,7 @@ export function AgGridDependencyFactory<Entity extends ObjectLiteral>({
 export function getProviderToken(
   // eslint-disable-next-line @typescript-eslint/ban-types
   entity: ClassType | Provider | string | symbol | Function,
-) {
+): string {
   if (entity && typeof entity === 'object' && entity.provide) {
     return typeof entity.provide === 'function'
       ? entity.provide.name

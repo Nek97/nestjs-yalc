@@ -41,7 +41,7 @@ export function defineCreateMutation<Entity extends Record<string, any>>(
               gqlCtx,
               input,
               extraInputsArgs[k],
-            );
+            ) as any;
           }
         });
 

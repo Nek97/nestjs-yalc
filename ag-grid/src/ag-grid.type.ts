@@ -19,14 +19,14 @@ export class PageDataAgGrid {
 
 export interface Connection {
   name: string;
-  nodes: any[];
+  nodes: unknown[];
   pageData: PageDataAgGrid;
 }
 
 export const typeMap: {
   [key: string]: { new (name: string): Connection };
 } = {};
-export default function AgGridGqlType<T>(type: Type<T>): any {
+export default function AgGridGqlType<T>(type: Type<T>): unknown {
   const { name } = type;
   if (typeMap[`${name}`]) return typeMap[`${name}`];
 

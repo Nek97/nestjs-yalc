@@ -220,10 +220,10 @@ export function defineGetSingleResource<Entity extends Record<string, any>>(
         finalId = id;
       }
 
-      checkFinalId(finalId);
+      checkFinalId(finalId as string);
 
       return dataLoader.loadOne(
-        [dataLoader.getSearchKey(), finalId],
+        [dataLoader.getSearchKey(), finalId as string],
         findOptions,
         methodOptions.throwOnNotFound ?? false,
       );

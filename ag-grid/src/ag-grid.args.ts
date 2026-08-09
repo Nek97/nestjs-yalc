@@ -12,8 +12,8 @@ import returnValue from '@nestjs-yalc/utils/returnValue';
 import { ClassType } from '@nestjs-yalc/types';
 import { RowDefaultValues } from './ag-grid.enum';
 
-export interface AgQueryParams<T = any> {
-  [index: string]: any; // dynamic parameters
+export interface AgQueryParams<T = unknown> {
+  [index: string]: unknown; // dynamic parameters
   startRow?: number;
   endRow?: number;
   sorting?: SortModelStrict<T>[];
@@ -32,7 +32,8 @@ export function agQueryParamsFactory(
     : FilterScalar;
 
   @ArgsType()
-  class AgQueryParams implements AgQueryParams {
+  class AgQueryParamsClass implements AgQueryParams {
+    [index: string]: any;
     startRow: number = defaultValues?.startRow ?? RowDefaultValues.START_ROW;
     endRow: number = defaultValues?.endRow ?? RowDefaultValues.END_ROW;
     @Field(returnValue(SortType), {
@@ -47,8 +48,8 @@ export function agQueryParamsFactory(
     filters?: typeof FilterType;
   }
 
-  typeMap.set(AgQueryParams, AgQueryParams);
-  return typeMap.get(AgQueryParams);
+  typeMap.set(AgQueryParamsClass, AgQueryParamsClass);
+  return typeMap.get(AgQueryParamsClass);
 }
 
 export function agQueryParamsNoPaginationFactory(
@@ -61,7 +62,8 @@ export function agQueryParamsNoPaginationFactory(
     : FilterScalar;
 
   @ArgsType()
-  class AgQueryParams implements AgQueryParams {
+  class AgQueryParamsNoPaginationClass implements AgQueryParams {
+    [index: string]: any;
     @Field(returnValue(SortType), {
       nullable: true,
       defaultValue: defaultValues?.sorting,
@@ -74,6 +76,6 @@ export function agQueryParamsNoPaginationFactory(
     filters?: typeof FilterType;
   }
 
-  typeMap.set(AgQueryParams, AgQueryParams);
-  return typeMap.get(AgQueryParams);
+  typeMap.set(AgQueryParamsNoPaginationClass, AgQueryParamsNoPaginationClass);
+  return typeMap.get(AgQueryParamsNoPaginationClass);
 }

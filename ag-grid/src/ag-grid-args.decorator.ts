@@ -415,7 +415,7 @@ export function mapAgGridParams(
   if (sorting) {
     sorting.forEach((sortParams) => {
       const colName = columnConversion(
-        sortParams.colId.toString(),
+        String((sortParams as any).colId),
         fieldMapper,
       );
       const val = sortParams.sort?.toUpperCase();
@@ -449,8 +449,8 @@ export function mapAgGridParams(
     switch (params.extraArgsStrategy) {
       case ExtraArgsStrategy.AT_LEAST_ONE:
         if (
-          args.length <= 0 ||
-          extraArgsKeys.every((argName) => typeof args[argName] === 'undefined')
+          Object.keys(args as any).length <= 0 ||
+          extraArgsKeys.every((argName) => typeof (args as any)[argName] === 'undefined')
         )
           throw new MissingArgumentsError();
         break;
@@ -485,7 +485,7 @@ export function mapAgGridParams(
 
       forcedFilters.push({
         key: argName, // the column name mapping is executed internally
-        value,
+        value: value as any,
         descriptors: params.extraArgs[argName],
       });
     }

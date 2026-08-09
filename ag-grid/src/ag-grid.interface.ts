@@ -175,7 +175,7 @@ export interface AgGridFindExtraOptions {
    * Extra args
    */
   args?: {
-    [index: string]: any;
+    [index: string]: unknown;
   };
 
   /**
@@ -186,7 +186,7 @@ export interface AgGridFindExtraOptions {
   _aliasType?: string;
 }
 
-export interface AgGridFindManyOptions<T = any> extends Omit<FindManyOptions<T>, 'where'> {
+export interface AgGridFindManyOptions<T = unknown> extends Omit<FindManyOptions<T>, 'where'> {
   where?: WhereCondition;
   /** Contains useful information about the graphql request */
   info?: GraphQLResolveInfo;
@@ -214,7 +214,7 @@ export interface BaseArg {
   /**
    *
    */
-  filterMiddleware?: { (ctx: GqlExecutionContext, filterValue?: any): any };
+  filterMiddleware?: { (ctx: GqlExecutionContext, filterValue?: unknown): unknown };
   /**
    *
    */
