@@ -6,7 +6,7 @@ import { FieldMiddleware, MiddlewareContext, NextFn } from '@nestjs/graphql';
 export const nullableTimestampMiddleware: FieldMiddleware = async (
   _ctx: MiddlewareContext,
   next: NextFn,
-) => {
+): Promise<unknown> => {
   const date = await next();
   return '0000-00-00 00:00:00' === date || !date ? null : date;
 };
