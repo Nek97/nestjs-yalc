@@ -8,7 +8,33 @@ export const DEF_FAKER_MAX_RETRIES = 1500;
 export const DEF_FAKER_MAX_TIME = 250;
 
 export class FakerHelper {
-  private uniqueEmails = new Set<string>();
+  private uniqueStore = new Set<string>();
+
+  /**
+   * Generates a unique value using the provided faker method and arguments.
+   * Maintains DRY by replacing the deprecated faker.unique function.
+   */
+  unique<Method extends (...args: any[]) => any>(
+    method: Method,
+    args: Parameters<Method>,
+    options?: { maxRetries?: number; maxTime?: number }
+  ): ReturnType<Method> {
+    const maxRetries = options?.maxRetries ?? DEF_FAKER_MAX_RETRIES;
+    let result: ReturnType<Method>;
+    let retries = 0;
+    
+    do {
+      result = method(...args);
+      retries++;
+    } while (this.uniqueStore.has(String(result)) && retries < maxRetries);
+    
+    if (this.uniqueStore.has(String(result))) {
+      throw new Error(`Faker max retries reached for unique value: ${String(result)}`);
+    }
+    this.uniqueStore.add(String(result));
+    return result;
+  }
+
   // We could also create a new email from the same person,
   // however we assume when this function is called we actually want a different person.
   createPerson() {
@@ -25,18 +51,7 @@ export class FakerHelper {
   }
 
   generateNewEmail(firstName: string, lastName: string, provider?: string) {
-    let email = '';
-    let retries = 0;
-    do {
-      email = faker.internet.email({ firstName, lastName, provider });
-      retries++;
-    } while (this.uniqueEmails.has(email) && retries < DEF_FAKER_MAX_RETRIES);
-    
-    if (this.uniqueEmails.has(email)) {
-      throw new Error('Faker max retries reached for unique email');
-    }
-    this.uniqueEmails.add(email);
-    return email;
+    return this.unique(faker.internet.email, [{ firstName, lastName, provider }]);
   }
 
   randomFromEnum<T extends Record<string, any>>(inputEnum: T): T[keyof T] {
