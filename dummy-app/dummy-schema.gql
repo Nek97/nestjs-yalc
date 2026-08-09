@@ -1,0 +1,192 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TestEntity {
+  id: ID!
+  name: String!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  balance: String!
+  age: Int!
+  posts: [Post]
+}
+
+type Query {
+  helloWorld: String!
+  getTests: [TestEntity!]!
+  getUsers(join: UserEntityJoinOptionsInputType, sorting: [UserEntitySortModel!], filters: UserEntityFilterExpressionInput): [User!]!
+  throwError: String!
+}
+
+input UserEntityJoinOptionsInputType {
+  posts: UserEntitypostsJoinInputType
+}
+
+input UserEntitypostsJoinInputType {
+  joinType: JoinTypes!
+  sorting: [PostEntitySortModel!]
+  filters: PostEntityFilterExpressionInput
+}
+
+enum JoinTypes {
+  LEFT_JOIN
+  INNER_JOIN
+}
+
+input PostEntitySortModel {
+  colId: PostEntityFieldEnum!
+  sort: SortDirection = ASC
+}
+
+enum PostEntityFieldEnum {
+  id
+  title
+  content
+}
+
+enum SortDirection {
+  DESC
+  ASC
+}
+
+input PostEntityFilterExpressionInput {
+  operator: FilterOperatorsEnum = AND
+  expressions: [PostEntityFilterInput!]!
+  childExpressions: [PostEntityFilterExpressionInput!]!
+}
+
+enum FilterOperatorsEnum {
+  AND
+  OR
+}
+
+input PostEntityFilterInput {
+  text: PostEntityFilterTextInput
+  number: PostEntityFilterNumberInput
+  date: PostEntityFilterDateInput
+  set: PostEntityFilterSetInput
+}
+
+input PostEntityFilterTextInput {
+  type: GeneralFiltersEnum!
+  field: PostEntityFieldEnum!
+  filter: String!
+}
+
+enum GeneralFiltersEnum {
+  NOT
+  CONTAINS
+  NOTCONTAINS
+  EQUALS
+  EQUAL
+  NOTEQUAL
+  LIKE
+  NOTLIKE
+  BETWEEN
+  NOTBETWEEN
+  IN
+  NOTIN
+  STARTSWITH
+  NOTSTARTSWITH
+  ENDSWITH
+  NOTENDSWITH
+  LESSTHAN
+  NOTLESSTHAN
+  LESSTHANOREQUAL
+  NOTLESSTHANOREQUAL
+  GREATERTHAN
+  NOTGREATERTHAN
+  GREATERTHANOREQUAL
+  NOTGREATERTHANOREQUAL
+  INRANGE
+  INDATE
+  ISNULL
+  NOTISNULL
+  VIRTUAL
+}
+
+input PostEntityFilterNumberInput {
+  type: GeneralFiltersEnum!
+  field: PostEntityFieldEnum!
+  filter: Float!
+  filterTo: Float
+}
+
+input PostEntityFilterDateInput {
+  type: GeneralFiltersEnum!
+  field: PostEntityFieldEnum!
+  dateFrom: String!
+  dateTo: String
+}
+
+input PostEntityFilterSetInput {
+  values: [String!]!
+  field: PostEntityFieldEnum!
+}
+
+input UserEntitySortModel {
+  colId: UserEntityFieldEnum!
+  sort: SortDirection = ASC
+}
+
+enum UserEntityFieldEnum {
+  id
+  firstName
+  lastName
+  balance
+  age
+}
+
+input UserEntityFilterExpressionInput {
+  operator: FilterOperatorsEnum = AND
+  expressions: [UserEntityFilterInput!]!
+  childExpressions: [UserEntityFilterExpressionInput!]!
+}
+
+input UserEntityFilterInput {
+  text: UserEntityFilterTextInput
+  number: UserEntityFilterNumberInput
+  date: UserEntityFilterDateInput
+  set: UserEntityFilterSetInput
+}
+
+input UserEntityFilterTextInput {
+  type: GeneralFiltersEnum!
+  field: UserEntityFieldEnum!
+  filter: String!
+}
+
+input UserEntityFilterNumberInput {
+  type: GeneralFiltersEnum!
+  field: UserEntityFieldEnum!
+  filter: Float!
+  filterTo: Float
+}
+
+input UserEntityFilterDateInput {
+  type: GeneralFiltersEnum!
+  field: UserEntityFieldEnum!
+  dateFrom: String!
+  dateTo: String
+}
+
+input UserEntityFilterSetInput {
+  values: [String!]!
+  field: UserEntityFieldEnum!
+}
+
+type Mutation {
+  createUser(firstName: String!, lastName: String!, balance: String!, age: Float!): User!
+}
