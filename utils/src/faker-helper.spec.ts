@@ -1,5 +1,5 @@
 import { FakerHelper } from './faker-helper';
-import * as faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 enum testEnum {
   KEY = 'value',

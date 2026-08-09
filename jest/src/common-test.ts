@@ -2,7 +2,7 @@
 
 import { ClassType, FactoryType } from '@nestjs-yalc/interfaces/common.type';
 // @ts-ignore
-import * as faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { getTestFilenameWithoutExtension } from './helpers';
 
 export function classesAreDefinedTest(

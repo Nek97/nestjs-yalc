@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 // TODO: Probably we can use the internal faker of typeorm-seeding to create uniqueness, like we do here
 // (mentioned in https://github.com/w3tecch/typeorm-seeding/issues/98#issuecomment-849585576)
@@ -8,6 +8,7 @@ export const DEF_FAKER_MAX_RETRIES = 1500;
 export const DEF_FAKER_MAX_TIME = 250;
 
 export class FakerHelper {
+  private uniqueEmails = new Set<string>();
   // We could also create a new email from the same person,
   // however we assume when this function is called we actually want a different person.
   createPerson() {
@@ -24,10 +25,18 @@ export class FakerHelper {
   }
 
   generateNewEmail(firstName: string, lastName: string, provider?: string) {
-    return faker.unique(faker.internet.email, [firstName, lastName, provider], {
-      maxRetries: DEF_FAKER_MAX_RETRIES,
-      maxTime: DEF_FAKER_MAX_TIME,
-    });
+    let email = '';
+    let retries = 0;
+    do {
+      email = faker.internet.email({ firstName, lastName, provider });
+      retries++;
+    } while (this.uniqueEmails.has(email) && retries < DEF_FAKER_MAX_RETRIES);
+    
+    if (this.uniqueEmails.has(email)) {
+      throw new Error('Faker max retries reached for unique email');
+    }
+    this.uniqueEmails.add(email);
+    return email;
   }
 
   randomFromEnum<T extends Record<string, any>>(inputEnum: T): T[keyof T] {
