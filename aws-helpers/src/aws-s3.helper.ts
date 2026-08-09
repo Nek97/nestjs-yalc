@@ -8,7 +8,7 @@ export const getFileFromS3 = async (
   const s3 = new aws.S3({
     region: process.env.S3_REGION,
   });
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject): void => {
     s3.getSignedUrl(
       'getObject',
       {
@@ -16,7 +16,7 @@ export const getFileFromS3 = async (
         Bucket: bucket,
         Expires: URL_EXPIRATION_TIME,
       },
-      (err: Error, url: string) => {
+      (err: Error, url: string): void => {
         if (err) {
           reject(err);
         }
