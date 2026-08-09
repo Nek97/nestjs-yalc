@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { FieldNode, SelectionNode } from 'graphql';
 import { GqlError, GqlErrorMsgs } from './gql.error';
 import { GqlComplexityHelper } from './gql-complexity.helper';

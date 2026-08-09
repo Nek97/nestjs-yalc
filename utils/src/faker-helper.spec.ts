@@ -110,7 +110,7 @@ describe('faker helper test', () => {
   it('should generate valid lock dates in the past', () => {
     jest.clearAllMocks();
     jest.spyOn(faker.datatype, 'number').mockReturnValue(0);
-    expect(fakerHelper.randomLockDate().valueOf()).toBeLessThan(Date.now());
+    expect(fakerHelper.randomLockDate()!.valueOf()).toBeLessThan(Date.now());
   });
 
   it('should generate valid lock dates in the future', () => {
@@ -118,7 +118,7 @@ describe('faker helper test', () => {
     jest.spyOn(faker.datatype, 'number').mockReturnValueOnce(1);
     // internally used by date.future to add to Date.now()
     jest.spyOn(faker.datatype, 'number').mockReturnValueOnce(1000);
-    expect(fakerHelper.randomLockDate().valueOf()).toBeGreaterThan(Date.now());
+    expect(fakerHelper.randomLockDate()!.valueOf()).toBeGreaterThan(Date.now());
   });
 
   it('should return undefined when no lock is present', () => {

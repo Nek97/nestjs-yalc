@@ -1,11 +1,11 @@
-import { IFieldMapper, isFieldMapper, isFieldMapperProperty } from '.';
+import { FieldMapper, isFieldMapper, isFieldMapperProperty } from '.';
 
 describe('test maps typeguards', () => {
   class FakeClass {
     fakeProperty: 'something';
   }
 
-  const fieldMapper: IFieldMapper<FakeClass> = {
+  const fieldMapper: FieldMapper<FakeClass> = {
     fakeProperty: {
       dst: 'somethingElse',
     },

@@ -3,7 +3,7 @@ import { LoggerService } from '@nestjs/common';
 import { LoggerAbstractService } from '../logger-abstract.service';
 
 class DummyLogger extends LoggerAbstractService {
-  constructor(logLevels) {
+  constructor(logLevels: any[]) {
     super('test', logLevels, createMock<LoggerService>());
   }
 }

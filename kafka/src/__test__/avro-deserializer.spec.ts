@@ -12,7 +12,7 @@ jest.mock('@kafkajs/confluent-schema-registry', () => {
 });
 
 describe('KafkaAvroDeserializer', () => {
-  let deserializer = new KafkaAvroDeserializer({}, {});
+  let deserializer = new KafkaAvroDeserializer({} as any, {} as any);
 
   it('Should be defined', () => {
     expect(deserializer).toBeDefined();

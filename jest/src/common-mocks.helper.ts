@@ -73,7 +73,7 @@ export const mockQueryBuilder = <T extends object>(
 
   mockObject.connection.createQueryBuilder = jest
     .fn()
-    .mockReturnValue(mockObject);
+    .mockReturnValue(mockObject) as any;
 
   return mockObject;
 };

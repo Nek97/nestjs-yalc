@@ -72,7 +72,7 @@
     "rxjs": "^7.8.2",
     "typeorm": "^0.3.20",
     "typeorm-model-generator": "^0.4.6",
-    "typeorm-seeding": "npm:@acore/typeorm-seeding@^1.6.2",
+    "typeorm-seeding": "^1.6.1",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {

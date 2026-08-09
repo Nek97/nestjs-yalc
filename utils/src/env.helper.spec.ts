@@ -37,7 +37,7 @@ describe('environment helper test', () => {
   });
 
   it('should return true if is production"', () => {
-    const env = envTestHelper(process.env);
+    const env = envTestHelper(process.env as any);
     env.setEnv('NODE_ENV', 'production');
     expect(isProduction(false)).toBeTruthy();
 
@@ -47,7 +47,7 @@ describe('environment helper test', () => {
   });
 
   it('should return false if is not production"', () => {
-    const env = envTestHelper(process.env);
+    const env = envTestHelper(process.env as any);
     env.setEnv('NODE_ENV', 'pipeline');
     expect(isProduction()).toBeFalsy();
 

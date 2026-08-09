@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StringValueNode, ValueNode } from 'graphql';
 import {
   UUIDScalar,

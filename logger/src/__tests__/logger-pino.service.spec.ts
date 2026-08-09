@@ -67,7 +67,7 @@ describe('Pino logger service test', () => {
 
   it('Test process events', async () => {
     const processOn = jest.spyOn(process, 'on');
-    processOn.mockImplementation((event, listener) => {
+    processOn.mockImplementation((_event, listener: any) => {
       listener();
       return process;
     });
@@ -75,7 +75,7 @@ describe('Pino logger service test', () => {
     const processExit = jest
       .spyOn(process, 'exit')
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      .mockImplementation(() => {});
+      .mockImplementation((() => {}) as any);
 
     new PinoLogger('test', LOG_LEVEL_ALL);
 
@@ -84,7 +84,7 @@ describe('Pino logger service test', () => {
 
   it('Test process events with Error', async () => {
     const processOn = jest.spyOn(process, 'on');
-    processOn.mockImplementation((event, listener) => {
+    processOn.mockImplementation((_event, listener: any) => {
       listener('fakeError');
       return process;
     });
@@ -92,7 +92,7 @@ describe('Pino logger service test', () => {
     const processExit = jest
       .spyOn(process, 'exit')
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      .mockImplementation(() => {});
+      .mockImplementation((() => {}) as any);
 
     new PinoLogger('test', LOG_LEVEL_ALL);
 
